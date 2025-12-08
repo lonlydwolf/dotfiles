@@ -93,18 +93,6 @@
           "type": "node"
         },
         {
-          "background": "#29315A",
-          "foreground": "#E64747",
-          "leading_diamond": " \ue0b6",
-          "properties": {
-            "time_format": "15:04:05"
-          },
-          "style": "diamond",
-          "template": "{{ .CurrentDate | date .Format }}",
-          "trailing_diamond": "\ue0b4",
-          "type": "time"
-        },
-        {
           "background": "transparent",
           "foreground": "#E64747",
           "foreground_templates": [
