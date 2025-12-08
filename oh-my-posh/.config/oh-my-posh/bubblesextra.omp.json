@@ -5,8 +5,8 @@
       "alignment": "right",
       "segments": [
         {
-          "background": "#29315A",
-          "foreground": "#3EC669",
+          "background": "#313244",
+          "foreground": "#89b4fa",
           "leading_diamond": "\ue0b6",
           "properties": {
             "style": "folder"
@@ -17,8 +17,8 @@
           "type": "path"
         },
         {
-          "background": "#29315A",
-          "foreground": "#43CCEA",
+          "background": "#313244",
+          "foreground": "#cba6f7",
           "leading_diamond": " \ue0b6",
           "properties": {
             "branch_template": "{{ trunc 25 .Branch }}",
@@ -31,8 +31,8 @@
           "type": "git"
         },
         {
-          "background": "#ff4500",
-          "foreground": "#ffffff",
+          "background": "#f38ba8",
+          "foreground": "#11111b",
           "leading_diamond": " \ue0b6",
           "style": "diamond",
           "template": "{{ if and .Env.OMP_IS_GIT_REPO (and .Env.OMP_MULTI_LANG_DETECTED (not .Env.OMP_SHOW_ALL_LANGS)) }}\ud83d\udc80{{ end }}",
@@ -40,8 +40,8 @@
           "type": "text"
         },
         {
-          "background": "#29315A",
-          "foreground": "#FF9248",
+          "background": "#313244",
+          "foreground": "#fab387",
           "leading_diamond": " \ue0b6",
           "properties": {
             "display_mode": "files",
@@ -54,8 +54,8 @@
           "type": "python"
         },
         {
-          "background": "#29315A",
-          "foreground": "#7FD5EA",
+          "background": "#313244",
+          "foreground": "#74c7ec",
           "leading_diamond": " \ue0b6",
           "properties": {
             "display_mode": "files",
@@ -67,8 +67,8 @@
           "type": "go"
         },
         {
-          "background": "#29315A",
-          "foreground": "#B388FF",
+          "background": "#313244",
+          "foreground": "#94e2d5",
           "leading_diamond": " \ue0b6",
           "properties": {
             "display_mode": "files",
@@ -80,8 +80,8 @@
           "type": "lua"
         },
         {
-          "background": "#29315A",
-          "foreground": "#4063D8",
+          "background": "#313244",
+          "foreground": "#a6e3a1",
           "leading_diamond": " \ue0b6",
           "properties": {
             "display_mode": "files",
@@ -94,10 +94,10 @@
         },
         {
           "background": "transparent",
-          "foreground": "#E64747",
+          "foreground": "#cdd6f4",
           "foreground_templates": [
-            "{{ if gt .Code 0 }}#ff0000{{ end }}",
-            "{{ if eq .Code 0 }}#00ff00{{ end }}"
+            "{{ if gt .Code 0 }}#f38ba8{{ end }}",
+            "{{ if eq .Code 0 }}#a6e3a1{{ end }}"
           ],
           "style": "plain",
           "template": " {{ if gt .Code 0 }}\uf00d{{ else }}\uf00c{{ end }}({{ .FormattedMs }})",
@@ -110,8 +110,8 @@
       "alignment": "left",
       "segments": [
         {
-          "background": "#29315A",
-          "foreground": "#AEA4BF",
+          "background": "#313244",
+          "foreground": "#cdd6f4",
           "leading_diamond": "\ue0b6",
           "style": "diamond",
           "template": "{{ if .SSHSession }}{{ .HostName }}{{ else }}{{ .UserName }}{{ end }} \u276f",
