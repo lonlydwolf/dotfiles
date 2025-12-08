@@ -1,34 +1,63 @@
 # ==========================================================
-# Zsh Configuration - "The Construct"
+# Zsh Configuration
 # ==========================================================
 
-# --- 1. Path & Environment ---
+# --- Path & Environment ---
 export ZSH="$HOME/.oh-my-zsh"
 export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 # Prefer Neovim as the default editor
 export EDITOR='nvim'
 export VISUAL='nvim'
 
-# --- 2. Oh-My-Zsh Setup ---
-# Disable internal theme (Starship handles this)
+# --- Oh-My-Zsh Setup ---
 ZSH_THEME=""
+
+# Magic Enter Plugin Binding
+MAGIC_ENTER_GIT_COMMAND='jj st'
+MAGIC_ENTER_OTHER_COMMAND='clear'
+
+# Tmux Plugin Config
+ZSH_TMUX_AUTOSTART_ONCE=false
+ZSH_TMUX_AUTONAME_SESSION= true
 
 # Plugins (Lazy loading not needed for these small lists)
 plugins=(
-	git
+	aliases		# List Available shortcuts
+	alias-finder	# Force use of Alias
 	docker
+	eza		# Smarter ls
+	fzf		# Fuzzy Finder integration
+	git
+	grc
+	jj		# My new git
+	magic-enter
+	npm
 	python
-	fzf          # Fuzzy Finder integration
-	zoxide       # Smarter 'cd'
-	vi-mode      # Standard Vim bindings helper
-	thefuck      # Fix previous command with 'fuck'
+	thefuck		# Fix previous command with 'fuck'
+	tmux
+	uv
+	vi-mode		# Standard Vim bindings helper
+	zoxide		# Smarter 'cd'
+	zsh-interactive-cd
 )
+
+# --- Eza Plugin Config ---
+zstyle ':omz:plugins:eza' 'dirs-first' yes
+zstyle ':omz:plugins:eza' 'git-status' yes
+zstyle ':omz:plugins:eza' 'icons' yes
+
+# --- Temp: Alias finder activation ---
+zstyle ':omz:plugins:alias-finder' autoload yes # disabled by default
+zstyle ':omz:plugins:alias-finder' longer yes # disabled by default
+zstyle ':omz:plugins:alias-finder' exact yes # disabled by default
+zstyle ':omz:plugins:alias-finder' cheaper yes # disabled by default
+
 
 source $ZSH/oh-my-zsh.sh
 source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 source /opt/homebrew/opt/zsh-fast-syntax-highlighting/share/zsh-fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
 
-# --- 3. Advanced Navigation (Zoxide + FZF) ---
+# --- Advanced Navigation (Zoxide + FZF) ---
 # Initialize Zoxide (Replaces 'cd')
 eval "$(zoxide init zsh --cmd cd)"
 
@@ -38,7 +67,7 @@ eval "$(zoxide init zsh --cmd cd)"
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 export FZF_DEFAULT_OPTS="--height 40% --layout=reverse --border --prompt='Matrix> '"
 
-# --- 4. Vi-Mode & Keybindings ---
+# --- Vi-Mode & Keybindings ---
 # Enable Vi-mode
 bindkey -v
 export KEYTIMEOUT=1
@@ -49,9 +78,12 @@ bindkey -M viins 'jk' vi-cmd-mode
 # Fix backspace issues in Vi-mode
 bindkey "^?" backward-delete-char
 
-# --- 5. History Management ---
-HISTSIZE=10000
-SAVEHIST=10000
+# Remap the clear-screen function from Ctrl-l to Ctrl-e
+bindkey "^E" clear-screen
+
+# --- History Management ---
+HISTSIZE=50000
+SAVEHIST=50000
 unsetopt SHARE_HISTORY        # Disable history sharing between concurrent sessions
 setopt APPEND_HISTORY         # Append to history file instead of overwriting
 setopt INC_APPEND_HISTORY     # Append commands immediately, don't wait for shell exit
@@ -65,11 +97,8 @@ export BAT_THEME="ansi"
 # Enable GRC (Generic Colouriser) if installed
 [[ -s "/opt/homebrew/etc/grc.zsh" ]] && source /opt/homebrew/etc/grc.zsh
 
-# --- 6. Aliases ---
+# --- Aliases ---
 # Modern Replacements
-alias ls='eza --icons --git --group-directories-first'
-alias ll='eza -l --icons --git --group-directories-first'
-alias la='eza -la --icons --git'
 alias cat='bat'
 alias find='fd'
 alias grep='rg'
@@ -78,16 +107,10 @@ alias grep='rg'
 alias v='nvim'
 alias vim='nvim'
 
-# Tmux
-alias t='tmux'
-alias ta='tmux attach -t'
-alias tn='tmux new -s'
-
 # Config editing shortcuts
 alias zshconfig="nvim ~/.zshrc"
 alias ompconfig="nvim ~/.config/oh-my-posh/bubblesextra.omp.json"
 alias ghosttyconfig="nvim ~/.config/ghostty/config"
-alias tmuxconfig="nvim ~/.tmux.conf"
 
 # Logic to detect languages ONLY inside Git repositories
 # Optimized for ZERO LATENCY using native Zsh globbing (No external processes like 'fd')
@@ -168,7 +191,7 @@ fi
 unset __conda_setup
 # <<< conda initialize <<<
 
-# --- 8. Window Resize Handler ---
+# --- Window Resize Handler ---
 # Force prompt redraw when the terminal window is resized to fix alignment
 TRAPWINCH() {
   zle && zle reset-prompt
@@ -184,7 +207,7 @@ fi
 
 
 
-# --- 7. Initialization (Optimized Speed) ---
+# --- Initialization (Optimized Speed) ---
 # Cache the Oh-My-Posh init script to avoid generating it on every shell start
 if [[ ! -f ~/.config/oh-my-posh/init.zsh ]]; then
   mkdir -p ~/.config/oh-my-posh
