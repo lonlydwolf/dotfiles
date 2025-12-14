@@ -2,126 +2,126 @@
   "$schema": "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json",
   "blocks": [
     {
+      "type": "prompt",
       "alignment": "right",
       "segments": [
         {
-          "background": "#313244",
-          "foreground": "#89b4fa",
-          "leading_diamond": "\ue0b6",
-          "properties": {
+          "options": {
             "style": "folder"
           },
-          "style": "diamond",
-          "template": "\uf07b {{ .Path }}",
+          "leading_diamond": "\ue0b6",
           "trailing_diamond": "\ue0b4",
-          "type": "path"
+          "template": "\uf07b {{ .Path }}",
+          "foreground": "#89b4fa",
+          "background": "#313244",
+          "type": "path",
+          "style": "diamond"
         },
         {
-          "background": "#313244",
-          "foreground": "#cba6f7",
-          "leading_diamond": " \ue0b6",
-          "properties": {
+          "options": {
             "branch_template": "{{ trunc 25 .Branch }}",
             "fetch_status": true,
             "fetch_upstream_icon": true
           },
-          "style": "diamond",
+          "leading_diamond": " \ue0b6",
+          "trailing_diamond": "\ue0b4",
           "template": "{{ .UpstreamIcon }}{{ .HEAD }}{{if .BranchStatus }} {{ .BranchStatus }}{{ end }}",
-          "trailing_diamond": "\ue0b4",
-          "type": "git"
-        },
-        {
-          "background": "#f38ba8",
-          "foreground": "#11111b",
-          "leading_diamond": " \ue0b6",
-          "style": "diamond",
-          "template": "{{ if and .Env.OMP_IS_GIT_REPO (and .Env.OMP_MULTI_LANG_DETECTED (not .Env.OMP_SHOW_ALL_LANGS)) }}\ud83d\udc80{{ end }}",
-          "trailing_diamond": "\ue0b4",
-          "type": "text"
-        },
-        {
+          "foreground": "#cba6f7",
           "background": "#313244",
-          "foreground": "#fab387",
+          "type": "git",
+          "style": "diamond"
+        },
+        {
           "leading_diamond": " \ue0b6",
-          "properties": {
+          "trailing_diamond": "\ue0b4",
+          "template": "{{ if and .Env.OMP_IS_GIT_REPO (and .Env.OMP_MULTI_LANG_DETECTED (not .Env.OMP_SHOW_ALL_LANGS)) }}💀{{ end }}",
+          "foreground": "#11111b",
+          "background": "#f38ba8",
+          "type": "text",
+          "style": "diamond"
+        },
+        {
+          "options": {
             "display_mode": "files",
             "fetch_version": true,
             "fetch_virtual_env": true
           },
-          "style": "diamond",
+          "leading_diamond": " \ue0b6",
+          "trailing_diamond": "\ue0b4",
           "template": "{{ if and .Env.OMP_IS_GIT_REPO (or (not .Env.OMP_MULTI_LANG_DETECTED) .Env.OMP_SHOW_ALL_LANGS) }}{{ if .Venv }}{{ .Venv }}{{ else }}Python{{ end }}({{ .Full }}){{ end }}",
-          "trailing_diamond": "\ue0b4",
-          "type": "python"
+          "foreground": "#fab387",
+          "background": "#313244",
+          "type": "python",
+          "style": "diamond"
         },
         {
-          "background": "#313244",
-          "foreground": "#74c7ec",
-          "leading_diamond": " \ue0b6",
-          "properties": {
+          "options": {
             "display_mode": "files",
             "fetch_version": true
           },
-          "style": "diamond",
+          "leading_diamond": " \ue0b6",
+          "trailing_diamond": "\ue0b4",
           "template": "{{ if and .Env.OMP_IS_GIT_REPO (or (not .Env.OMP_MULTI_LANG_DETECTED) .Env.OMP_SHOW_ALL_LANGS) }}Go({{ .Full }}){{ end }}",
-          "trailing_diamond": "\ue0b4",
-          "type": "go"
+          "foreground": "#74c7ec",
+          "background": "#313244",
+          "type": "go",
+          "style": "diamond"
         },
         {
-          "background": "#313244",
-          "foreground": "#94e2d5",
-          "leading_diamond": " \ue0b6",
-          "properties": {
+          "options": {
             "display_mode": "files",
             "fetch_version": true
           },
-          "style": "diamond",
+          "leading_diamond": " \ue0b6",
+          "trailing_diamond": "\ue0b4",
           "template": "{{ if and .Env.OMP_IS_GIT_REPO (or (not .Env.OMP_MULTI_LANG_DETECTED) .Env.OMP_SHOW_ALL_LANGS) }}Lua({{ .Full }}){{ end }}",
-          "trailing_diamond": "\ue0b4",
-          "type": "lua"
+          "foreground": "#94e2d5",
+          "background": "#313244",
+          "type": "lua",
+          "style": "diamond"
         },
         {
-          "background": "#313244",
-          "foreground": "#a6e3a1",
-          "leading_diamond": " \ue0b6",
-          "properties": {
+          "options": {
             "display_mode": "files",
             "fetch_version": true
           },
-          "style": "diamond",
-          "template": "{{ if and .Env.OMP_IS_GIT_REPO (or (not .Env.OMP_MULTI_LANG_DETECTED) .Env.OMP_SHOW_ALL_LANGS) }}TS({{ .Full }}){{ end }}",
+          "leading_diamond": " \ue0b6",
           "trailing_diamond": "\ue0b4",
-          "type": "node"
+          "template": "{{ if and .Env.OMP_IS_GIT_REPO (or (not .Env.OMP_MULTI_LANG_DETECTED) .Env.OMP_SHOW_ALL_LANGS) }}TS({{ .Full }}){{ end }}",
+          "foreground": "#a6e3a1",
+          "background": "#313244",
+          "type": "node",
+          "style": "diamond"
         },
         {
-          "background": "transparent",
+          "template": " {{ if gt .Code 0 }}\uf00d{{ else }}\uf00c{{ end }}({{ .FormattedMs }})",
           "foreground": "#cdd6f4",
+          "background": "transparent",
+          "type": "executiontime",
+          "style": "plain",
           "foreground_templates": [
             "{{ if gt .Code 0 }}#f38ba8{{ end }}",
             "{{ if eq .Code 0 }}#a6e3a1{{ end }}"
-          ],
-          "style": "plain",
-          "template": " {{ if gt .Code 0 }}\uf00d{{ else }}\uf00c{{ end }}({{ .FormattedMs }})",
-          "type": "executiontime"
+          ]
         }
-      ],
-      "type": "prompt"
+      ]
     },
     {
+      "type": "prompt",
       "alignment": "left",
       "segments": [
         {
-          "background": "#313244",
-          "foreground": "#cdd6f4",
           "leading_diamond": "\ue0b6",
-          "style": "diamond",
-          "template": "{{ if .SSHSession }}{{ .HostName }}{{ else }}{{ .UserName }}{{ end }} \u276f",
           "trailing_diamond": "\ue0b4",
-          "type": "session"
+          "template": "{{ if .SSHSession }}{{ .HostName }}{{ else }}{{ .UserName }}{{ end }} ❯",
+          "foreground": "#cdd6f4",
+          "background": "#313244",
+          "type": "session",
+          "style": "diamond"
         }
-      ],
-      "type": "prompt"
+      ]
     }
   ],
-  "final_space": true,
-  "version": 3
+  "version": 4,
+  "final_space": true
 }
