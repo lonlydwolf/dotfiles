@@ -65,7 +65,15 @@ eval "$(zoxide init zsh --cmd cd)"
 # Ctrl+T: Find files
 # Ctrl+R: Find history
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-export FZF_DEFAULT_OPTS="--height 40% --layout=reverse --border --prompt='Matrix> '"
+
+# Official Catppuccin Mocha Theme
+export FZF_DEFAULT_OPTS=" \
+--color=bg+:#313244,bg:#1e1e2e,spinner:#f5e0dc,hl:#f38ba8 \
+--color=fg:#cdd6f4,header:#f38ba8,info:#cba6f7,pointer:#f5e0dc \
+--color=marker:#b4befe,fg+:#cdd6f4,prompt:#cba6f7,hl+:#f38ba8 \
+--color=selected-bg:#45475a \
+--multi \
+--height 40% --layout=reverse --border --prompt='LonlyDWolf> '"
 # Better FZF History (Ctrl-R) behavior:
 # - No sort: shows history chronologically (easiest to find recent commands)
 # - Exact: no fuzzy matching (optional, remove if you prefer fuzzy)
