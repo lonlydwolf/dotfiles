@@ -2,16 +2,22 @@ tap "grishka/grishka"
 tap "jandedobbeleer/oh-my-posh"
 tap "r-lib/rig"
 tap "tw93/tap"
+# Bourne-Again SHell, a UNIX command interpreter
+brew "bash"
 # Clone of cat(1) with syntax highlighting and Git integration
 brew "bat"
 # Cross-platform make
 brew "cmake"
 # Console Matrix
 brew "cmatrix"
+# Run arbitrary commands when files change
+brew "entr"
 # Modern, maintained replacement for ls
 brew "eza"
 # Simple, fast and user-friendly alternative to find
 brew "fd"
+# Play, record, convert, and stream audio and video
+brew "ffmpeg"
 # Command-line fuzzy finder written in Go
 brew "fzf"
 # Syntax-highlighting pager for git and diff output
@@ -22,8 +28,16 @@ brew "go"
 brew "grc"
 # Improved colored diff
 brew "icdiff"
+# Tools and libraries to manipulate images in many formats
+brew "imagemagick"
+# Interactive computing in Python
+brew "ipython"
 # Git-compatible distributed version control system
 brew "jj"
+# Lightweight and flexible command-line JSON processor
+brew "jq"
+# Command-line note taker
+brew "jrnl"
 # Package manager for the Lua programming language
 brew "luarocks"
 # Mac App Store command-line interface
@@ -34,14 +48,20 @@ brew "mcfly"
 brew "neovim"
 # Open-source, cross-platform JavaScript runtime environment
 brew "node"
-# AI coding agent, built for the terminal
-brew "opencode"
 # Search tool like grep and The Silver Searcher
 brew "ripgrep"
+# AI coding agent, built for the terminal
+brew "opencode"
+# PDF rendering library (based on the xpdf-3.0 code base)
+brew "poppler"
+# SVG rendering tool and library
+brew "resvg"
 # Extremely fast Python linter, written in Rust
 brew "ruff"
 # Safe, concurrent, practical language
 brew "rust"
+# 7-Zip is a file archiver with a high compression ratio
+brew "sevenzip"
 # Organize software neatly under a single directory tree (e.g. /usr/local)
 brew "stow"
 # Programmatically correct mistyped console commands
@@ -50,6 +70,8 @@ brew "thefuck"
 brew "tlrc"
 # Terminal multiplexer
 brew "tmux"
+# Upgrade all the things
+brew "topgrade"
 # Display directories as trees (with optional color/HTML output)
 brew "tree"
 # Parser generator tool
@@ -60,6 +82,8 @@ brew "uv"
 brew "watch"
 # Internet file retriever
 brew "wget"
+# Blazing fast terminal file manager written in Rust, based on async I/O
+brew "yazi"
 # Shell extension to navigate your filesystem faster
 brew "zoxide"
 # Fish-like fast/unobtrusive autosuggestions for zsh
@@ -161,6 +185,4 @@ vscode "njpwerner.autodocstring"
 vscode "pkief.material-icon-theme"
 vscode "streetsidesoftware.code-spell-checker"
 vscode "tal7aouy.theme"
-vscode "visualstudioexptteam.intellicode-api-usage-examples"
-vscode "visualstudioexptteam.vscodeintellicode"
 vscode "vscode-icons-team.vscode-icons"
