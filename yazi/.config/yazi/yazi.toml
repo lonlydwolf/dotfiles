@@ -1,0 +1,9 @@
+# Use VLC for Video files
+[opener]
+play = [
+    { run = 'vlc "$@"', desc = "VLC", orphan = true }
+]
+[open]
+rules = [
+  { mime = "video/*", use = [ "play", "reveal" ] },
+]
