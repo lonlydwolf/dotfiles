@@ -66,14 +66,21 @@ eval "$(zoxide init zsh --cmd cd)"
 # Ctrl+R: Find history
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 export FZF_DEFAULT_OPTS="--height 40% --layout=reverse --border --prompt='Matrix> '"
+# Better FZF History (Ctrl-R) behavior:
+# - No sort: shows history chronologically (easiest to find recent commands)
+# - Exact: no fuzzy matching (optional, remove if you prefer fuzzy)
+export FZF_CTRL_R_OPTS="--no-sort --exact"
 
 # --- Vi-Mode & Keybindings ---
 # Enable Vi-mode
 bindkey -v
-export KEYTIMEOUT=1
+export KEYTIMEOUT=20
 
 # Map 'jk' to Escape (The ultimate Neovim cheat code)
 bindkey -M viins 'jk' vi-cmd-mode
+
+# Bind Ctrl-R in Vi-insert mode to FZF history
+bindkey -M viins '^R' fzf-history-widget
 
 # Fix backspace issues in Vi-mode
 bindkey "^?" backward-delete-char
