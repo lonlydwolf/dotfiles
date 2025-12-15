@@ -93,7 +93,7 @@ setopt HIST_FIND_NO_DUPS      # Don't show duplicates in search
 setopt HIST_SAVE_NO_DUPS      # Don't save duplicates
 
 # --- Colorization Tools ---
-export BAT_THEME="ansi"
+export BAT_THEME="Catppuccin Mocha"
 # Enable GRC (Generic Colouriser) if installed
 [[ -s "/opt/homebrew/etc/grc.zsh" ]] && source /opt/homebrew/etc/grc.zsh
 
@@ -174,6 +174,15 @@ toggle_langs() {
     unset OMP_SHOW_ALL_LANGS
     echo "Showing Smart/Skeleton mode."
   fi
+}
+
+# Yazi Shell Wrapper
+function y() {
+	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+	yazi "$@" --cwd-file="$tmp"
+	IFS= read -r -d '' cwd < "$tmp"
+	[ -n "$cwd" ] && [ "$cwd" != "$PWD" ] && builtin cd -- "$cwd"
+	rm -f -- "$tmp"
 }
 
 # >>> conda initialize >>>
