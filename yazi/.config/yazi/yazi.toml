@@ -4,6 +4,6 @@ play = [
     { run = 'vlc "$@"', desc = "VLC", orphan = true }
 ]
 [open]
-rules = [
+prepend_rules = [
   { mime = "video/*", use = [ "play", "reveal" ] },
 ]
