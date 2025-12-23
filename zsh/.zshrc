@@ -3,6 +3,8 @@
 # ==========================================================
 
 # --- Path & Environment ---
+# Add to your shell profile BEFORE switching
+export XDG_CONFIG_HOME="$HOME/.config"
 export ZSH="$HOME/.oh-my-zsh"
 export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 # Prefer Neovim as the default editor
