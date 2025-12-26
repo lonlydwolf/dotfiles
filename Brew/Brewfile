@@ -6,6 +6,10 @@ tap "tw93/tap"
 brew "bash"
 # Clone of cat(1) with syntax highlighting and Git integration
 brew "bat"
+# Resource monitor. C++ version and continuation of bashtop and bpytop
+brew "btop"
+# Multi-shell multi-command argument completer
+brew "carapace"
 # Cross-platform make
 brew "cmake"
 # Console Matrix
@@ -48,10 +52,14 @@ brew "mcfly"
 brew "neovim"
 # Open-source, cross-platform JavaScript runtime environment
 brew "node"
+# Modern shell for the GitHub era
+brew "nushell"
 # Search tool like grep and The Silver Searcher
 brew "ripgrep"
 # AI coding agent, built for the terminal
 brew "opencode"
+# Fast, disk space efficient package manager
+brew "pnpm"
 # PDF rendering library (based on the xpdf-3.0 code base)
 brew "poppler"
 # SVG rendering tool and library
@@ -62,12 +70,16 @@ brew "ruff"
 brew "rust"
 # 7-Zip is a file archiver with a high compression ratio
 brew "sevenzip"
+# Command-line interface for https://speedtest.net bandwidth tests
+brew "speedtest-cli"
+# Cross-shell prompt for astronauts
+brew "starship"
 # Organize software neatly under a single directory tree (e.g. /usr/local)
 brew "stow"
+# Very fast implementation of tldr in Rust
+brew "tealdeer"
 # Programmatically correct mistyped console commands
 brew "thefuck"
-# Official tldr client written in Rust
-brew "tlrc"
 # Terminal multiplexer
 brew "tmux"
 # Upgrade all the things
@@ -84,6 +96,8 @@ brew "watch"
 brew "wget"
 # Blazing fast terminal file manager written in Rust, based on async I/O
 brew "yazi"
+# Pluggable terminal workspace, with terminal multiplexer as the base feature
+brew "zellij"
 # Shell extension to navigate your filesystem faster
 brew "zoxide"
 # Fish-like fast/unobtrusive autosuggestions for zsh
