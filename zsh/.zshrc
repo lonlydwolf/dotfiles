@@ -29,6 +29,7 @@ plugins=(
 	docker
 	eza		# Smarter ls
 	fzf		# Fuzzy Finder integration
+	fzf-tab
 	git
 	grc
 	jj		# My new git
