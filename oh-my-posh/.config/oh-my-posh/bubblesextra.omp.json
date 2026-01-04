@@ -55,6 +55,15 @@
           "style": "diamond"
         },
         {
+          "leading_diamond": " \ue0b6",
+          "trailing_diamond": "\ue0b4",
+          "template": "{{ if and .Env.OMP_IS_GIT_REPO (and .Env.OMP_MULTI_LANG_DETECTED .Env.OMP_PYTHON_DEEP) }}Python{{ end }}",
+          "foreground": "#fab387",
+          "background": "#313244",
+          "type": "text",
+          "style": "diamond"
+        },
+        {
           "options": {
             "display_mode": "files",
             "fetch_version": true
@@ -65,6 +74,15 @@
           "foreground": "#74c7ec",
           "background": "#313244",
           "type": "go",
+          "style": "diamond"
+        },
+        {
+          "leading_diamond": " \ue0b6",
+          "trailing_diamond": "\ue0b4",
+          "template": "{{ if and .Env.OMP_IS_GIT_REPO (and .Env.OMP_MULTI_LANG_DETECTED .Env.OMP_GO_DEEP) }}Go{{ end }}",
+          "foreground": "#74c7ec",
+          "background": "#313244",
+          "type": "text",
           "style": "diamond"
         },
         {
@@ -81,6 +99,15 @@
           "style": "diamond"
         },
         {
+          "leading_diamond": " \ue0b6",
+          "trailing_diamond": "\ue0b4",
+          "template": "{{ if and .Env.OMP_IS_GIT_REPO (and .Env.OMP_MULTI_LANG_DETECTED .Env.OMP_LUA_DEEP) }}Lua{{ end }}",
+          "foreground": "#94e2d5",
+          "background": "#313244",
+          "type": "text",
+          "style": "diamond"
+        },
+        {
           "options": {
             "display_mode": "files",
             "fetch_version": true
@@ -91,6 +118,37 @@
           "foreground": "#a6e3a1",
           "background": "#313244",
           "type": "node",
+          "style": "diamond"
+        },
+        {
+          "leading_diamond": " \ue0b6",
+          "trailing_diamond": "\ue0b4",
+          "template": "{{ if and .Env.OMP_IS_GIT_REPO (and .Env.OMP_MULTI_LANG_DETECTED .Env.OMP_NODE_DEEP) }}TS{{ end }}",
+          "foreground": "#a6e3a1",
+          "background": "#313244",
+          "type": "text",
+          "style": "diamond"
+        },
+        {
+          "options": {
+            "display_mode": "files",
+            "fetch_version": true
+          },
+          "leading_diamond": " \ue0b6",
+          "trailing_diamond": "\ue0b4",
+          "template": "{{ if and .Env.OMP_IS_GIT_REPO (or (not .Env.OMP_MULTI_LANG_DETECTED) .Env.OMP_SHOW_ALL_LANGS) }}Rust({{ .Full }}){{ end }}",
+          "foreground": "#eba0ac",
+          "background": "#313244",
+          "type": "rust",
+          "style": "diamond"
+        },
+        {
+          "leading_diamond": " \ue0b6",
+          "trailing_diamond": "\ue0b4",
+          "template": "{{ if and .Env.OMP_IS_GIT_REPO (and .Env.OMP_MULTI_LANG_DETECTED .Env.OMP_RUST_DEEP) }}Rust{{ end }}",
+          "foreground": "#eba0ac",
+          "background": "#313244",
+          "type": "text",
           "style": "diamond"
         },
         {

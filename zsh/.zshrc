@@ -134,70 +134,6 @@ alias zshconfig="nvim ~/.zshrc"
 alias ompconfig="nvim ~/.config/oh-my-posh/bubblesextra.omp.json"
 alias ghosttyconfig="nvim ~/.config/ghostty/config"
 
-# Logic to detect languages ONLY inside Git repositories
-# Optimized for ZERO LATENCY using native Zsh globbing (No external processes like 'fd')
-check_languages() {
-  # Reset state immediately
-  unset OMP_MULTI_LANG_DETECTED
-
-  # 1. Fast Git Check
-  if ! git rev-parse --is-inside-work-tree &>/dev/null; then
-    unset OMP_IS_GIT_REPO
-    return
-  fi
-  export OMP_IS_GIT_REPO=1
-
-  # 2. Zero-Fork Language Detection
-  # Use Zsh array count with (N) nullglob qualifier. 
-  # This is the correct way to check for existence without false positives.
-  local lang_count=0
-  
-  # Python
-  local py_files=( *.py(N) */*.py(N) )
-  if [[ ${#py_files[@]} -gt 0 || -f "requirements.txt" || -f "pyproject.toml" ]]; then
-    ((lang_count++))
-  fi
-  
-  # Go
-  local go_files=( *.go(N) */*.go(N) )
-  if [[ ${#go_files[@]} -gt 0 || -f "go.mod" ]]; then
-    ((lang_count++))
-  fi
-  
-  # Lua
-  local lua_files=( *.lua(N) */*.lua(N) )
-  if [[ ${#lua_files[@]} -gt 0 ]]; then
-    ((lang_count++))
-  fi
-  
-  # Node/TS
-  local ts_files=( *.ts(N) */*.ts(N) *.js(N) */*.js(N) )
-  if [[ -f "package.json" || ${#ts_files[@]} -gt 0 ]]; then
-    ((lang_count++))
-  fi
-
-  # 3. Set Skeleton Flag
-  if [[ $lang_count -gt 1 ]]; then
-    export OMP_MULTI_LANG_DETECTED=1
-  fi
-}
-
-# Hook this function to run before every prompt
-autoload -Uz add-zsh-hook
-add-zsh-hook precmd check_languages
-add-zsh-hook chpwd check_languages
-
-# Toggle function (Forces SHOW ALL logic)
-toggle_langs() {
-  if [[ -z "$OMP_SHOW_ALL_LANGS" ]]; then
-    export OMP_SHOW_ALL_LANGS=1
-    echo "Showing ALL languages (Override)."
-  else
-    unset OMP_SHOW_ALL_LANGS
-    echo "Showing Smart/Skeleton mode."
-  fi
-}
-
 # Yazi Shell Wrapper
 function y() {
 	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
@@ -240,8 +176,12 @@ fi
 
 # --- Initialization (Optimized Speed) ---
 # Cache the Oh-My-Posh init script to avoid generating it on every shell start
-if [[ ! -f ~/.config/oh-my-posh/init.zsh ]]; then
+# Regenerate if the config file is newer than the cache
+omp_config="$HOME/.config/oh-my-posh/bubblesextra.omp.json"
+omp_cache="$HOME/.config/oh-my-posh/init.zsh"
+
+if [[ ! -f "$omp_cache" || "$omp_config" -nt "$omp_cache" ]]; then
   mkdir -p ~/.config/oh-my-posh
-  oh-my-posh init zsh --config ~/.config/oh-my-posh/bubblesextra.omp.json --print > ~/.config/oh-my-posh/init.zsh
+  oh-my-posh init zsh --config "$omp_config" --print > "$omp_cache"
 fi
-source ~/.config/oh-my-posh/init.zsh
+source "$omp_cache"
