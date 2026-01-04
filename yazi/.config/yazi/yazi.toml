@@ -1,7 +1,10 @@
 # Use VLC for Video files
 [opener]
 play = [
-    { run = 'vlc "$@"', desc = "VLC", orphan = true }
+    { run = 'open -a VLC "$@"', desc = "VLC", orphan = true }
+]
+open = [
+    { run = 'open "$@"', desc = "Open", orphan = true, for = "macos" }
 ]
 [open]
 prepend_rules = [
