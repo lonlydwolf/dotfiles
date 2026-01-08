@@ -57,7 +57,7 @@
         {
           "leading_diamond": " \ue0b6",
           "trailing_diamond": "\ue0b4",
-          "template": "{{ if and .Env.OMP_IS_GIT_REPO (and .Env.OMP_MULTI_LANG_DETECTED .Env.OMP_PYTHON_DEEP) }}Python{{ end }}",
+          "template": "{{ if and .Env.OMP_IS_GIT_REPO (and .Env.OMP_MULTI_LANG_DETECTED (and .Env.OMP_PYTHON_DEEP .Env.OMP_SHOW_ALL_LANGS)) }}Python{{ end }}",
           "foreground": "#fab387",
           "background": "#313244",
           "type": "text",
@@ -79,7 +79,7 @@
         {
           "leading_diamond": " \ue0b6",
           "trailing_diamond": "\ue0b4",
-          "template": "{{ if and .Env.OMP_IS_GIT_REPO (and .Env.OMP_MULTI_LANG_DETECTED .Env.OMP_GO_DEEP) }}Go{{ end }}",
+          "template": "{{ if and .Env.OMP_IS_GIT_REPO (and .Env.OMP_MULTI_LANG_DETECTED (and .Env.OMP_GO_DEEP .Env.OMP_SHOW_ALL_LANGS)) }}Go{{ end }}",
           "foreground": "#74c7ec",
           "background": "#313244",
           "type": "text",
@@ -101,7 +101,7 @@
         {
           "leading_diamond": " \ue0b6",
           "trailing_diamond": "\ue0b4",
-          "template": "{{ if and .Env.OMP_IS_GIT_REPO (and .Env.OMP_MULTI_LANG_DETECTED .Env.OMP_LUA_DEEP) }}Lua{{ end }}",
+          "template": "{{ if and .Env.OMP_IS_GIT_REPO (and .Env.OMP_MULTI_LANG_DETECTED (and .Env.OMP_LUA_DEEP .Env.OMP_SHOW_ALL_LANGS)) }}Lua{{ end }}",
           "foreground": "#94e2d5",
           "background": "#313244",
           "type": "text",
@@ -123,7 +123,7 @@
         {
           "leading_diamond": " \ue0b6",
           "trailing_diamond": "\ue0b4",
-          "template": "{{ if and .Env.OMP_IS_GIT_REPO (and .Env.OMP_MULTI_LANG_DETECTED .Env.OMP_NODE_DEEP) }}TS{{ end }}",
+          "template": "{{ if and .Env.OMP_IS_GIT_REPO (and .Env.OMP_MULTI_LANG_DETECTED (and .Env.OMP_NODE_DEEP .Env.OMP_SHOW_ALL_LANGS)) }}TS{{ end }}",
           "foreground": "#a6e3a1",
           "background": "#313244",
           "type": "text",
@@ -145,7 +145,7 @@
         {
           "leading_diamond": " \ue0b6",
           "trailing_diamond": "\ue0b4",
-          "template": "{{ if and .Env.OMP_IS_GIT_REPO (and .Env.OMP_MULTI_LANG_DETECTED .Env.OMP_RUST_DEEP) }}Rust{{ end }}",
+          "template": "{{ if and .Env.OMP_IS_GIT_REPO (and .Env.OMP_MULTI_LANG_DETECTED (and .Env.OMP_RUST_DEEP .Env.OMP_SHOW_ALL_LANGS)) }}Rust{{ end }}",
           "foreground": "#eba0ac",
           "background": "#313244",
           "type": "text",
