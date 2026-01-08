@@ -39,7 +39,6 @@ plugins=(
 	thefuck		# Fix previous command with 'fuck'
 	tmux
 	uv
-	vi-mode		# Standard Vim bindings helper
 	zoxide		# Smarter 'cd'
 	zsh-interactive-cd
 )
@@ -131,7 +130,7 @@ alias vim='nvim'
 
 # Config editing shortcuts
 alias zshconfig="nvim ~/.zshrc"
-alias ompconfig="nvim ~/.config/oh-my-posh/bubblesextra.omp.json"
+alias ompconfig="nvim ~/.config/oh-my-posh/bubblesextra.omp.toml"
 alias ghosttyconfig="nvim ~/.config/ghostty/config"
 
 # Yazi Shell Wrapper
@@ -177,7 +176,7 @@ fi
 # --- Initialization (Optimized Speed) ---
 # Cache the Oh-My-Posh init script to avoid generating it on every shell start
 # Regenerate if the config file is newer than the cache
-omp_config="$HOME/.config/oh-my-posh/bubblesextra.omp.json"
+omp_config="$HOME/.config/oh-my-posh/oh-my-posh.toml"
 omp_cache="$HOME/.config/oh-my-posh/init.zsh"
 
 if [[ ! -f "$omp_cache" || "$omp_config" -nt "$omp_cache" ]]; then

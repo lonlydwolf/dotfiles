@@ -4,12 +4,19 @@ check_languages() {
   # Reset state immediately
   unset OMP_MULTI_LANG_DETECTED
 
-  # 1. Fast Git Check
-  if ! git rev-parse --is-inside-work-tree &>/dev/null; then
-    unset OMP_IS_GIT_REPO
+  # 1. Fast Repo Check (Git or Jujutsu)
+  local is_repo=0
+  if git rev-parse --is-inside-work-tree &>/dev/null; then
+    is_repo=1
+  elif command -v jj &>/dev/null && jj root &>/dev/null; then
+    is_repo=1
+  fi
+
+  if [[ $is_repo -eq 0 ]]; then
+    unset OMP_IS_REPO
     return
   fi
-  export OMP_IS_GIT_REPO=1
+  export OMP_IS_REPO=1
 
   # 2. Zero-Fork Language Detection
   local lang_count=0
@@ -104,7 +111,7 @@ toggle_langs() {
 # Debug function to see what languages are detected
 debug_langs() {
   echo "--- OMP State ---"
-  echo "OMP_IS_GIT_REPO: $OMP_IS_GIT_REPO"
+  echo "OMP_IS_REPO: $OMP_IS_REPO"
   echo "OMP_MULTI_LANG_DETECTED: $OMP_MULTI_LANG_DETECTED"
   echo "OMP_SHOW_ALL_LANGS: $OMP_SHOW_ALL_LANGS"
   echo "--- Deep Detection ---"

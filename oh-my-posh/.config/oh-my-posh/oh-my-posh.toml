@@ -1,0 +1,185 @@
+version = 4
+final_space = true
+
+[[blocks]]
+  type = 'prompt'
+  alignment = 'right'
+
+  [[blocks.segments]]
+    type = 'path'
+    style = 'diamond'
+    leading_diamond = "\uE0B6"
+    trailing_diamond = "\uE0B4"
+    template = "\uF07B {{ .Path }}"
+    foreground = '#89b4fa'
+    background = '#313244'
+    [blocks.segments.properties]
+      style = 'folder'
+
+  [[blocks.segments]]
+    type = 'jujutsu'
+    style = 'diamond'
+    leading_diamond = " \uE0B6"
+    trailing_diamond = "\uE0B4"
+    template = "\uE702 {{ .ChangeID }}{{ if .ClosestBookmarks }} \uE0A0 {{ .ClosestBookmarks }}{{ end }}{{ if .Working.Changed }} \uF040 ({{ if gt .Working.Modified 0 }}\uF044 {{ .Working.Modified }} {{ end }}{{ if gt .Working.Added 0 }}\uF067 {{ .Working.Added }} {{ end }}{{ if gt .Working.Deleted 0 }}\uF1F8 {{ .Working.Deleted }} {{ end }}){{ end }}"
+    foreground = '#cba6f7'
+    background = '#313244'
+    [blocks.segments.properties]
+      fetch_status = true
+
+  [[blocks.segments]]
+    type = 'text'
+    style = 'diamond'
+    leading_diamond = " \uE0B6"
+    trailing_diamond = "\uE0B4"
+    template = "{{ if and .Env.OMP_IS_REPO (and .Env.OMP_MULTI_LANG_DETECTED (not .Env.OMP_SHOW_ALL_LANGS)) }}💀{{ end }}"
+    foreground = '#11111b'
+    background = '#f38ba8'
+
+  [[blocks.segments]]
+    type = 'python'
+    style = 'diamond'
+    leading_diamond = " \uE0B6"
+    trailing_diamond = "\uE0B4"
+    template = "{{ if and .Env.OMP_IS_REPO (or (not .Env.OMP_MULTI_LANG_DETECTED) .Env.OMP_SHOW_ALL_LANGS) }}{{ if .Venv }}{{ .Venv }}{{ else }}\uE73C{{ end }} {{ .Full }}{{ end }}"
+    foreground = '#fab387'
+    background = '#313244'
+    [blocks.segments.properties]
+      display_mode = 'files'
+      fetch_version = true
+      fetch_virtual_env = true
+
+  [[blocks.segments]]
+    type = 'text'
+    style = 'diamond'
+    leading_diamond = " \uE0B6"
+    trailing_diamond = "\uE0B4"
+    template = "{{ if and .Env.OMP_IS_REPO (and .Env.OMP_MULTI_LANG_DETECTED (and .Env.OMP_PYTHON_DEEP .Env.OMP_SHOW_ALL_LANGS)) }} \uE73C {{ end }}"
+    foreground = '#fab387'
+    background = '#313244'
+
+  [[blocks.segments]]
+    type = 'go'
+    style = 'diamond'
+    leading_diamond = " \uE0B6"
+    trailing_diamond = "\uE0B4"
+    template = "{{ if and .Env.OMP_IS_REPO (or (not .Env.OMP_MULTI_LANG_DETECTED) .Env.OMP_SHOW_ALL_LANGS) }}\uE627 {{ .Full }}{{ end }}"
+    foreground = '#74c7ec'
+    background = '#313244'
+    [blocks.segments.properties]
+      display_mode = 'files'
+      fetch_version = true
+
+  [[blocks.segments]]
+    type = 'text'
+    style = 'diamond'
+    leading_diamond = " \uE0B6"
+    trailing_diamond = "\uE0B4"
+    template = "{{ if and .Env.OMP_IS_REPO (and .Env.OMP_MULTI_LANG_DETECTED (and .Env.OMP_GO_DEEP .Env.OMP_SHOW_ALL_LANGS)) }} \uE627 {{ end }}"
+    foreground = '#74c7ec'
+    background = '#313244'
+
+  [[blocks.segments]]
+    type = 'lua'
+    style = 'diamond'
+    leading_diamond = " \uE0B6"
+    trailing_diamond = "\uE0B4"
+    template = "{{ if and .Env.OMP_IS_REPO (or (not .Env.OMP_MULTI_LANG_DETECTED) .Env.OMP_SHOW_ALL_LANGS) }}\uE620 {{ .Full }}{{ end }}"
+    foreground = '#94e2d5'
+    background = '#313244'
+    [blocks.segments.properties]
+      display_mode = 'files'
+      fetch_version = true
+
+  [[blocks.segments]]
+    type = 'text'
+    style = 'diamond'
+    leading_diamond = " \uE0B6"
+    trailing_diamond = "\uE0B4"
+    template = "{{ if and .Env.OMP_IS_REPO (and .Env.OMP_MULTI_LANG_DETECTED (and .Env.OMP_LUA_DEEP .Env.OMP_SHOW_ALL_LANGS)) }} \uE620 {{ end }}"
+    foreground = '#94e2d5'
+    background = '#313244'
+
+  [[blocks.segments]]
+    type = 'node'
+    style = 'diamond'
+    leading_diamond = " \uE0B6"
+    trailing_diamond = "\uE0B4"
+    template = "{{ if and .Env.OMP_IS_REPO (or (not .Env.OMP_MULTI_LANG_DETECTED) .Env.OMP_SHOW_ALL_LANGS) }}\uE628 {{ .Full }}{{ end }}"
+    foreground = '#a6e3a1'
+    background = '#313244'
+    [blocks.segments.properties]
+      display_mode = 'files'
+      fetch_version = true
+
+  [[blocks.segments]]
+    type = 'text'
+    style = 'diamond'
+    leading_diamond = " \uE0B6"
+    trailing_diamond = "\uE0B4"
+    template = "{{ if and .Env.OMP_IS_REPO (and .Env.OMP_MULTI_LANG_DETECTED (and .Env.OMP_NODE_DEEP .Env.OMP_SHOW_ALL_LANGS)) }} \uE628 {{ end }}"
+    foreground = '#a6e3a1'
+    background = '#313244'
+
+  [[blocks.segments]]
+    type = 'rust'
+    style = 'diamond'
+    leading_diamond = " \uE0B6"
+    trailing_diamond = "\uE0B4"
+    template = "{{ if and .Env.OMP_IS_REPO (or (not .Env.OMP_MULTI_LANG_DETECTED) .Env.OMP_SHOW_ALL_LANGS) }}\uE7A8 {{ .Full }}{{ end }}"
+    foreground = '#eba0ac'
+    background = '#313244'
+    [blocks.segments.properties]
+      display_mode = 'files'
+      fetch_version = true
+
+  [[blocks.segments]]
+    type = 'text'
+    style = 'diamond'
+    leading_diamond = " \uE0B6"
+    trailing_diamond = "\uE0B4"
+    template = "{{ if and .Env.OMP_IS_REPO (and .Env.OMP_MULTI_LANG_DETECTED (and .Env.OMP_RUST_DEEP .Env.OMP_SHOW_ALL_LANGS)) }} \uE7A8 {{ end }}"
+    foreground = '#eba0ac'
+    background = '#313244'
+
+  [[blocks.segments]]
+    type = 'executiontime'
+    style = 'plain'
+    template = " {{ if gt .Code 0 }}\uF00D{{ else }}\uF00C{{ end }}({{ .FormattedMs }})"
+    foreground = '#cdd6f4'
+    background = 'transparent'
+    foreground_templates = [
+      '{{ if gt .Code 0 }}#f38ba8{{ end }}',
+      '{{ if eq .Code 0 }}#a6e3a1{{ end }}'
+    ]
+
+[[blocks]]
+  type = 'prompt'
+  alignment = 'left'
+
+  [[blocks.segments]]
+    type = 'text'
+    style = 'diamond'
+    leading_diamond = "\uE0B6"
+    trailing_diamond = "\uE0B4"
+    template = " {{ if .Env.POSH_VI_MODE }}{{ .Env.POSH_VI_MODE }}{{ else }}I{{ end }} "
+    foreground = '#11111b'
+    background = '#a6e3a1'
+    background_templates = [
+      "{{ if eq .Env.POSH_VI_MODE \"N\" }}#89b4fa{{ end }}",
+      "{{ if eq .Env.POSH_VI_MODE \"V\" }}#cba6f7{{ end }}"
+    ]
+
+  [[blocks.segments]]
+    type = 'session'
+    style = 'diamond'
+    leading_diamond = "\uE0B6"
+    trailing_diamond = "\uE0B4"
+    template = "\uF007 {{ if .SSHSession }}{{ .HostName }}{{ else }}{{ .UserName }}{{ end }} ❯"
+    foreground = '#cdd6f4'
+    background = '#313244'
+
+[transient_prompt]
+  foreground = '#cdd6f4'
+  background = 'transparent'
+  template = "❯ "
