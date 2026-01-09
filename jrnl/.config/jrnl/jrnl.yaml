@@ -1,0 +1,19 @@
+colors:
+  body: none
+  date: black
+  tags: yellow
+  title: cyan
+default_hour: 23
+default_minute: 59
+editor: nvim
+encrypt: false
+highlight: true
+indent_character: '|'
+journals:
+  default:
+    journal: /Users/lonlydwolf/Library/CloudStorage/GoogleDrive-ahmad.gangester@gmail.com/My Drive/Personal/Obsidian/Personal Knowledge/Jrnl/jrnl.md
+linewrap: 79
+tagsymbols: '#@'
+template: false
+timeformat: '%F %r'
+version: v4.2.1
