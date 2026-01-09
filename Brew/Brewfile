@@ -1,5 +1,6 @@
 tap "grishka/grishka"
 tap "jandedobbeleer/oh-my-posh"
+tap "oven-sh/bun"
 tap "r-lib/rig"
 tap "tw93/tap"
 # Bourne-Again SHell, a UNIX command interpreter
@@ -68,6 +69,10 @@ brew "resvg"
 brew "ruff"
 # Safe, concurrent, practical language
 brew "rust"
+# Rust toolchain installer
+brew "rustup"
+# Smart session manager for the terminal
+brew "sesh"
 # 7-Zip is a file archiver with a high compression ratio
 brew "sevenzip"
 # Command-line interface for https://speedtest.net bandwidth tests
@@ -106,6 +111,8 @@ brew "zsh-autosuggestions"
 brew "zsh-fast-syntax-highlighting"
 # Prompt theme engine for any shell
 brew "jandedobbeleer/oh-my-posh/oh-my-posh"
+# Incredibly fast JavaScript runtime, bundler, transpiler and package manager - all in one.
+brew "oven-sh/bun/bun"
 # Comprehensive macOS cleanup and application uninstall tool
 brew "tw93/tap/mole"
 # Enable Windows-like alt-tab
@@ -157,6 +164,8 @@ cask "raycast"
 cask "rectangle"
 # The R Installation Manager
 cask "rig"
+# Team communication and collaboration software
+cask "slack"
 # System monitor for the menu bar
 cask "stats"
 # Video game digital distribution service
@@ -173,6 +182,8 @@ cask "vlc"
 cask "warp"
 # Native desktop client for WhatsApp
 cask "whatsapp"
+mas "Folder Preview", id: 6698876601
+mas "Markdown Preview", id: 6739955340
 mas "Toggl Track", id: 1291898086
 mas "V2BOX", id: 6446814690
 mas "X-VPN", id: 1454212375
