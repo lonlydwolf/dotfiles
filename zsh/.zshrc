@@ -20,7 +20,7 @@ MAGIC_ENTER_OTHER_COMMAND='clear'
 
 # Tmux Plugin Config
 ZSH_TMUX_AUTOSTART_ONCE=false
-ZSH_TMUX_AUTONAME_SESSION= true
+ZSH_TMUX_AUTONAME_SESSION=true
 
 # Plugins (Lazy loading not needed for these small lists)
 plugins=(
@@ -178,11 +178,34 @@ fi
 omp_config="$HOME/.config/oh-my-posh/oh-my-posh.toml"
 omp_cache="$HOME/.config/oh-my-posh/init.zsh"
 
+# Explicitly export the theme for the generic init script
+export POSH_THEME="$omp_config"
+
 if [[ ! -f "$omp_cache" || "$omp_config" -nt "$omp_cache" ]]; then
   mkdir -p ~/.config/oh-my-posh
-  oh-my-posh init zsh --config "$omp_config" --print > "$omp_cache"
+  # Atomic write: generate to temp first to avoid corruption
+  oh-my-posh init zsh --config "$omp_config" --print > "$omp_cache.tmp"
+  
+  if [[ -s "$omp_cache.tmp" ]]; then
+    # Inject the POSH_THEME export into the top of the generated script
+    # This ensures the script is self-contained and works even if the env var is lost
+    sed -i '' "1s|^|export POSH_THEME=\"$omp_config\"\\n|" "$omp_cache.tmp"
+    
+    # HARDENING: Inject the config flag into the print command calls.
+    # We replace '$_omp_executable print' with '$_omp_executable print --config ...'
+    # This ensures the config is passed as an argument, not part of the command name.
+    sed -i '' "s|\$_omp_executable print|\$_omp_executable print --config \"$omp_config\"|g" "$omp_cache.tmp"
+    
+    mv "$omp_cache.tmp" "$omp_cache"
+  else
+    rm -f "$omp_cache.tmp"
+    # Fallback or silent failure (will use default/generic if cache exists, or error)
+  fi
 fi
-source "$omp_cache"
+
+if [[ -f "$omp_cache" ]]; then
+  source "$omp_cache"
+fi
 
 # --- Window Resize Handler ---
 # Force prompt redraw on resize.
