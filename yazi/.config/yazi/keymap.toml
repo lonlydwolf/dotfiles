@@ -13,3 +13,9 @@ desc = "Chmod on selected files"
 on = [ "C" ]
 run = "plugin ouch"
 desc = "Compress with ouch"
+
+# Git: cd to root
+[[mgr.prepend_keymap]]
+on = [ "g", "r" ]
+run = 'shell -- ya emit cd "$(git rev-parse --show-toplevel)"'
+desc = "Go to git root"
