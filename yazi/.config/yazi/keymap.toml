@@ -1,3 +1,15 @@
 [[mgr.prepend_keymap]]
 on = "<C-p>"
 run = "shell --orphan -- swift ~/.config/yazi/ql.swift %s"
+
+# Plugin: chmod
+[[mgr.prepend_keymap]]
+on = [ "c", "m" ]
+run = "plugin chmod"
+desc = "Chmod on selected files"
+
+# Plugin: ouch (Compression)
+[[mgr.prepend_keymap]]
+on = [ "C" ]
+run = "plugin ouch"
+desc = "Compress with ouch"
