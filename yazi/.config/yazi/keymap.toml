@@ -1,6 +1,6 @@
 [[mgr.prepend_keymap]]
 on = "<C-p>"
-run = "shell --orphan -- swift ~/.config/yazi/ql.swift %s"
+run = "shell --orphan -- ~/.config/yazi/quicklook %s"
 
 # Plugin: chmod
 [[mgr.prepend_keymap]]
