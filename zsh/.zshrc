@@ -84,6 +84,7 @@ export FZF_DEFAULT_OPTS=" \
 # - No sort: shows history chronologically (easiest to find recent commands)
 # - Exact: no fuzzy matching (optional, remove if you prefer fuzzy)
 export FZF_CTRL_R_OPTS="--no-sort --exact"
+export FZF_CTRL_T_OPTS="--preview 'bat -n --color=always {}'"
 
 # --- Vi-Mode & Keybindings ---
 # Enable Vi-mode
@@ -115,6 +116,8 @@ setopt HIST_SAVE_NO_DUPS      # Don't save duplicates
 
 # --- Colorization Tools ---
 export BAT_THEME="Catppuccin Mocha"
+export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+
 # Enable GRC (Generic Colouriser) if installed
 [[ -s "/opt/homebrew/etc/grc.zsh" ]] && source /opt/homebrew/etc/grc.zsh
 
@@ -123,6 +126,7 @@ export BAT_THEME="Catppuccin Mocha"
 alias cat='bat'
 alias find='fd'
 alias grep='rg'
+alias -g -- --help='--help | bat -plhelp'
 
 # Neovim
 alias v='nvim'
