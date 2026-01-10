@@ -161,11 +161,6 @@ fi
 unset __conda_setup
 # <<< conda initialize <<<
 
-# --- Window Resize Handler ---
-# Force prompt redraw when the terminal window is resized to fix alignment
-TRAPWINCH() {
-  zle && zle reset-prompt
-}
 
 # --- Custom Environment Variables ---
 # Source the separate secrets file if it exists and is readable.
@@ -188,3 +183,25 @@ if [[ ! -f "$omp_cache" || "$omp_config" -nt "$omp_cache" ]]; then
   oh-my-posh init zsh --config "$omp_config" --print > "$omp_cache"
 fi
 source "$omp_cache"
+
+# --- Window Resize Handler ---
+# Force prompt redraw on resize.
+# 1. Update Zsh's dimensions from the OS to be 100% sure.
+# 2. Call _omp_precmd to recalculate the prompt spacing for the new width.
+TRAPWINCH() {
+  local new_size
+  new_size=$(stty size 2>/dev/null)
+  if [[ -n "$new_size" ]]; then
+    export LINES=${new_size%% *}
+    export COLUMNS=${new_size##* }
+  fi
+  
+  # Regenerate prompt string with the new COLUMNS value
+  _omp_precmd
+  
+  if [[ -o zle ]]; then
+    zle reset-prompt
+    zle -R
+  fi
+}
+
