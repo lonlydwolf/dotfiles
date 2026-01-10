@@ -1028,6 +1028,11 @@ require('lazy').setup({
         return '%2l:%-2v'
       end
 
+      -- SCOPE VISUALIZATION:
+      -- - Draws a vertical line at the current indent level.
+      -- - Uses Treesitter to understand code blocks.
+      require('mini.indentscope').setup()
+
       -- ... and there is more!
       --  Check out: https://github.com/echasnovski/mini.nvim
     end,
