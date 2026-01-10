@@ -8,5 +8,10 @@ use = "ndtoan96/ouch"
 rev = "594b8a2"
 hash = "c9e628fc0312d198db22ae2fa74883b"
 
+[[plugin.deps]]
+use = "yazi-rs/plugins:smart-enter"
+rev = "68f7d48"
+hash = "56fdabc96fc1f4d53c96eb884b02a5be"
+
 [flavor]
 deps = []
