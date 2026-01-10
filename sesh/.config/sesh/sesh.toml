@@ -1,0 +1,10 @@
+# ~/.config/sesh/sesh.toml
+
+[default_session]
+startup_command = "~/.config/sesh/scripts/startup"
+
+# You can still override specific sessions if needed
+# [[session]]
+# name = "downloads"
+# path = "~/Downloads"
+# startup_command = "ls"

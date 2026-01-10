@@ -1,0 +1,20 @@
+#!/bin/bash
+# ~/.config/sesh/scripts/workflow_dotfiles
+# NOTE: This is fallback. We prefer Tmuxinator now.
+
+session=$1
+root=$2
+
+# Window 1: Gemini
+tmux rename-window -t "${session}:1" "Gemini"
+
+# Window 2: Yazi (Shell first, then command)
+tmux new-window -t "${session}" -n "Yazi" -c "$root"
+tmux send-keys -t "${session}:Yazi" "yazi" C-m
+
+# Window 3: Vim (Shell first, then command)
+tmux new-window -t "${session}" -n "Vim" -c "$root"
+tmux send-keys -t "${session}:Vim" "nvim" C-m
+
+# Select Gemini
+tmux select-window -t "${session}:1"

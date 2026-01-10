@@ -128,6 +128,17 @@ alias find='fd'
 alias grep='rg'
 alias -g -- --help='--help | bat -plhelp'
 
+# Sesh (Session Manager)
+function s() {
+  {
+    exec < /dev/tty
+    exec <&1
+    local session
+    session=$(sesh list -i | gum filter --limit 1 --placeholder 'Pick a sesh' --height 50 --prompt='⚡')
+    [[ -n "$session" ]] && sesh connect "$session"
+  }
+}
+
 # Neovim
 alias v='nvim'
 alias vim='nvim'

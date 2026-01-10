@@ -1,0 +1,18 @@
+# ~/.config/tmuxinator/dotfiles.yml
+name: dotfiles
+root: ~/dotfiles
+startup_window: Gemini
+
+windows:
+  - Gemini:
+      layout: main-vertical
+      panes:
+        - # Default shell
+  - Yazi: 
+      layout: main-vertical
+      panes:
+        - yazi
+  - Vim: 
+      layout: main-vertical
+      panes:
+        - nvim

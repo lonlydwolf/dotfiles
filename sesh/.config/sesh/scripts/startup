@@ -1,0 +1,36 @@
+#!/bin/bash
+# ~/.config/sesh/scripts/startup
+
+# This script is the "Brain" that decides which layout to load.
+
+session=$(tmux display-message -p '#S')
+root=$(tmux display-message -p '#{session_path}')
+scripts_dir="$HOME/.config/sesh/scripts"
+
+# Helper function to detect coding projects
+is_coding_project() {
+    # 1. Check Root Config Files
+    if [[ -f "$root/package.json" ]] || [[ -f "$root/pyproject.toml" ]] || [[ -f "$root/go.mod" ]] || [[ -f "$root/Cargo.toml" ]]; then
+        return 0
+    fi
+    
+    # 2. Check for .git or .jj in Root OR Subdirectories (maxdepth 2)
+    # We look for .git/.jj directories. 'head -n 1' stops after the first match for speed.
+    if find "$root" -maxdepth 2 -type d \( -name ".git" -o -name ".jj" \) 2>/dev/null | head -n 1 | grep -q .; then
+        return 0
+    fi
+    
+    return 1
+}
+
+# Logic to pick the strategy
+if [[ "$session" == "dotfiles" ]]; then
+    # We prefer Tmuxinator for dotfiles, but if this script runs, fallback to simple layout
+    source "$scripts_dir/workflow_default" "$session" "$root"
+
+elif is_coding_project; then
+    source "$scripts_dir/workflow_coding" "$session" "$root"
+
+else
+    source "$scripts_dir/workflow_default" "$session" "$root"
+fi

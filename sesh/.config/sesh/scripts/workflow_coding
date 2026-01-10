@@ -1,0 +1,31 @@
+#!/bin/bash
+# ~/.config/sesh/scripts/workflow_coding
+
+session=$1
+root=$2
+
+# Window 1: Gemini (Already exists, just rename)
+tmux rename-window -t "${session}:1" "Gemini"
+
+# Window 2: Workflow (3 Panes)
+tmux new-window -t "${session}" -n "Workflow" -c "$root"
+# Split Top (1) / Bottom (2) - 40% height for bottom
+tmux split-window -v -t "${session}:Workflow" -c "$root" -l 40%
+# Split Bottom (2) -> Left (2) / Right (3)
+tmux split-window -h -t "${session}:Workflow.2" -c "$root"
+
+# Setup Pane 2 (Bottom Left): JJ Watch
+tmux send-keys -t "${session}:Workflow.2" "watch --color jj log --color=always" C-m
+
+# Setup Pane 3 (Bottom Right): UV Run (Just ready)
+# tmux send-keys -t "${session}:Workflow.3" "uv run "
+
+# Focus Top Pane (1)
+tmux select-pane -t "${session}:Workflow.1"
+
+# Window 3: Vim (Start shell, then run nvim)
+tmux new-window -t "${session}" -n "Vim" -c "$root"
+tmux send-keys -t "${session}:Vim" "nvim" C-m
+
+# Select Gemini (First window)
+tmux select-window -t "${session}:1"

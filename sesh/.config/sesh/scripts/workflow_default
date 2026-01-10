@@ -1,0 +1,15 @@
+#!/bin/bash
+# ~/.config/sesh/scripts/workflow_default
+
+session=$1
+root=$2
+
+# Window 1: Gemini
+tmux rename-window -t "${session}:1" "Gemini"
+
+# Window 2: Vim (Start shell, then run nvim)
+tmux new-window -t "${session}" -n "Vim" -c "$root"
+tmux send-keys -t "${session}:Vim" "nvim" C-m
+
+# Select Gemini
+tmux select-window -t "${session}:1"
