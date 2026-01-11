@@ -7,6 +7,8 @@ tap "tw93/tap"
 brew "bash"
 # Clone of cat(1) with syntax highlighting and Git integration
 brew "bat"
+# Bash scripts that integrate bat with various command-line tools
+brew "bat-extras"
 # Resource monitor. C++ version and continuation of bashtop and bpytop
 brew "btop"
 # Multi-shell multi-command argument completer
@@ -15,6 +17,8 @@ brew "carapace"
 brew "cmake"
 # Console Matrix
 brew "cmatrix"
+# Securely send things from one computer to another
+brew "croc"
 # Run arbitrary commands when files change
 brew "entr"
 # Modern, maintained replacement for ls
@@ -31,6 +35,8 @@ brew "git-delta"
 brew "go"
 # Colorize logfiles and command output
 brew "grc"
+# Tool for glamorous shell scripts
+brew "gum"
 # Improved colored diff
 brew "icdiff"
 # Tools and libraries to manipulate images in many formats
@@ -43,6 +49,8 @@ brew "jj"
 brew "jq"
 # Command-line note taker
 brew "jrnl"
+# TUI for Jujutsu/jj
+brew "lazyjj"
 # Package manager for the Lua programming language
 brew "luarocks"
 # Mac App Store command-line interface
@@ -59,6 +67,8 @@ brew "nushell"
 brew "ripgrep"
 # AI coding agent, built for the terminal
 brew "opencode"
+# Painless compression and decompression for your terminal
+brew "ouch"
 # Fast, disk space efficient package manager
 brew "pnpm"
 # PDF rendering library (based on the xpdf-3.0 code base)
@@ -87,6 +97,8 @@ brew "tealdeer"
 brew "thefuck"
 # Terminal multiplexer
 brew "tmux"
+# Manage complex tmux sessions easily
+brew "tmuxinator"
 # Upgrade all the things
 brew "topgrade"
 # Display directories as trees (with optional color/HTML output)
@@ -136,6 +148,8 @@ cask "docker-desktop"
 # VPN client for secure internet access and private browsing
 cask "expressvpn"
 cask "font-jetbrains-mono-nerd-font"
+# Download accelerator and organiser
+cask "free-download-manager"
 # Set of tools to manage resources and applications hosted on Google Cloud
 cask "gcloud-cli"
 # Terminal emulator that uses platform-native UI and GPU acceleration
