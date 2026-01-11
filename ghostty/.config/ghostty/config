@@ -54,3 +54,46 @@ window-padding-y = 15
 macos-titlebar-style = tabs
 mouse-hide-while-typing = true
 window-step-resize = true
+
+# --- MacOS Keybinding ---
+# Tmux actions 
+# Mapping Cmd+T to New tmux Window (Prefix + c)
+keybind = super+t=text:\x01c
+
+# Mapping Cmd+W to Close tmux Pane (Prefix + x)
+keybind = super+w=text:\x01x
+
+# Mapping Cmd+Z to Zoom tmux Pane (Prefix + z)
+keybind = super+z=text:\x01z
+
+# Mapping Cmd+[ and Cmd+] for Window Navigation (Prefix + p/n)
+keybind = super+physical:left_bracket=text:\x01p
+keybind = super+physical:right_bracket=text:\x01n
+
+# Mapping Cmd+o to Open tmux-sessionx (Prefix + o)
+keybind = super+o=text:\x01o
+
+# Mapping Cmd+k to Open sesh (Prefix + K) 
+keybind = super+k=text:\x01K
+
+# Mapping Cmd+j to Open super sesh (Prefix + J) 
+keybind = super+j=text:\x01J
+
+# Mapping Cmd+d to Detach from tmux (Prefix + d)
+keybind = super+d=text:\x01d
+
+# Mapping Cmd+{1-91} to Select tmux Window (Prefix + {2-9})
+keybind = super+physical:one=text:\x011
+keybind = super+physical:two=text:\x012
+keybind = super+physical:three=text:\x013
+keybind = super+physical:four=text:\x014
+keybind = super+physical:five=text:\x015
+keybind = super+physical:six=text:\x016
+keybind = super+physical:seven=text:\x017
+keybind = super+physical:eight=text:\x018
+keybind = super+physical:nine=text:\x019
+
+# Mapping Cmd+r to Reload tmux Config (Prefix + r)
+keybind = super+r=text:\x01r
+
+
