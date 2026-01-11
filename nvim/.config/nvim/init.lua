@@ -231,6 +231,14 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
+-- Disable mini.indentscope for specific filetypes (like alpha)
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = { 'alpha', 'dashboard', 'help', 'neo-tree' },
+  callback = function()
+    vim.b.miniindentscope_disable = true
+  end,
+})
+
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
