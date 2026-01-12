@@ -35,7 +35,6 @@ cursor-color = #f5e0dc
 cursor-text = #11111b
 cursor-style = block
 cursor-style-blink = true
-shell-integration = zsh
 
 # --- Typography ---
 font-family = JetBrainsMono Nerd Font
@@ -56,6 +55,8 @@ mouse-hide-while-typing = true
 window-step-resize = true
 
 # --- MacOS Keybinding ---
+macos-option-as-alt = left
+
 # Tmux actions 
 # Mapping Cmd+T to New tmux Window (Prefix + c)
 keybind = super+t=text:\x01c
