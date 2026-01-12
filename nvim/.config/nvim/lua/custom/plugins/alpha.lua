@@ -131,28 +131,37 @@ return {
       vim.api.nvim_create_autocmd("User", {
         pattern = "AlphaReady",
         callback = function()
+          -- Save original state
+          local current_guicursor = vim.opt.guicursor:get()
+          
+          -- Hide UI
           vim.opt.cmdheight = 0
           vim.opt.laststatus = 0
+          
+          -- Hide Cursor (Blend + Guicursor Method)
           local ok, hl = pcall(vim.api.nvim_get_hl, 0, { name = 'Cursor' })
           if ok then
             hl.blend = 100
             vim.api.nvim_set_hl(0, 'Cursor', hl)
+            -- Force usage of the blended Cursor group for all modes
+            vim.opt.guicursor:append('a:Cursor/lCursor')
           end
-          vim.opt.guicursor:append('a:Cursor/lCursor')
-        end,
-      })
-      
-      vim.api.nvim_create_autocmd("BufUnload", {
-        buffer = 0,
-        callback = function()
-          vim.opt.cmdheight = 1
-          vim.opt.laststatus = 3
-          local ok, hl = pcall(vim.api.nvim_get_hl, 0, { name = 'Cursor' })
-          if ok then
-            hl.blend = 0
-            vim.api.nvim_set_hl(0, 'Cursor', hl)
-          end
-          vim.opt.guicursor:remove('a:Cursor/lCursor')
+
+          -- Setup Restore Hook (Local to this buffer)
+          vim.api.nvim_create_autocmd("BufUnload", {
+            buffer = 0,
+            callback = function()
+              vim.opt.cmdheight = 1
+              vim.opt.laststatus = 3
+              
+              -- Restore Cursor
+              if ok then
+                hl.blend = 0
+                vim.api.nvim_set_hl(0, 'Cursor', hl)
+                vim.opt.guicursor = current_guicursor
+              end
+            end,
+          })
         end,
       })
 
