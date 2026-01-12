@@ -40,7 +40,6 @@ plugins=(
 	tmux
 	uv
 	zoxide		# Smarter 'cd'
-	zsh-interactive-cd
 )
 
 # --- Eza Plugin Config ---
@@ -72,19 +71,134 @@ eval "$(zoxide init zsh --cmd cd)"
 # Ctrl+R: Find history
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-# Official Catppuccin Mocha Theme
+# --- FZF Performance ---
+# Use fd instead of find for speed and respecting .gitignore
+export FZF_DEFAULT_COMMAND='fd --type f --strip-cwd-prefix --hidden --follow --exclude .git'
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+
+# ==========================================================
+# Enhanced FZF Configuration
+# ==========================================================
+
+# Base FZF options with Catppuccin Mocha
 export FZF_DEFAULT_OPTS=" \
 --color=bg+:#313244,bg:#1e1e2e,spinner:#f5e0dc,hl:#f38ba8 \
 --color=fg:#cdd6f4,header:#f38ba8,info:#cba6f7,pointer:#f5e0dc \
 --color=marker:#b4befe,fg+:#cdd6f4,prompt:#cba6f7,hl+:#f38ba8 \
 --color=selected-bg:#45475a \
 --multi \
---height 40% --layout=reverse --border --prompt='LonlyDWolf> '"
-# Better FZF History (Ctrl-R) behavior:
-# - No sort: shows history chronologically (easiest to find recent commands)
-# - Exact: no fuzzy matching (optional, remove if you prefer fuzzy)
-export FZF_CTRL_R_OPTS="--no-sort --exact"
-export FZF_CTRL_T_OPTS="--preview 'bat -n --color=always {}'"
+--height 40% \
+--layout=reverse \
+--border=rounded \
+--prompt='⚡ ' \
+--pointer='▶' \
+--marker='✓' \
+--bind='ctrl-/:toggle-preview' \
+--bind='ctrl-a:select-all' \
+--bind='ctrl-d:deselect-all' \
+--bind='ctrl-y:execute-silent(echo -n {+} | pbcopy)'"
+
+
+# Enhanced Ctrl+R (History Search)
+export FZF_CTRL_R_OPTS="
+  --preview-window hidden \
+  --with-nth=2.. \
+  --height 70% \
+  --bind 'ctrl-y:execute-silent(echo -n {2..} | pbcopy)+abort' \
+  --color header:#cba6f7 \
+  --header 'Press CTRL-Y to copy command into clipboard' \
+  --border-label=' Command History ' \
+  --prompt='  '"
+
+# Enhanced Ctrl+T (File Search)
+export FZF_CTRL_T_OPTS="
+  --walker-skip .git,node_modules,target,.venv \
+  --preview 'if [ -d {} ]; then eza --tree --level=2 --icons --color=always {}; else bat -n --color=always --line-range :500 {}; fi' \
+  --bind 'ctrl-/:change-preview-window(down|hidden|)' \
+  --bind 'ctrl-y:execute-silent(echo -n {} | pbcopy)+abort' \
+  --border-label=' Find Files ' \
+  --prompt='  ' \
+  --header 'CTRL-/ (preview) · CTRL-Y (copy path)' \
+  --color header:#cba6f7"
+
+# Alt+C (Directory Jump) - Enhanced
+# Sort alphabetically
+export FZF_ALT_C_COMMAND="fd --type d --hidden --strip-cwd-prefix --exclude .git . | sort"
+export FZF_ALT_C_OPTS="
+  --walker-skip .git,node_modules,target,.venv \
+  --preview 'eza --tree --level=2 --icons --color=always {}' \
+  --border-label=' Change Directory ' \
+  --prompt='  ' \
+  --header 'Select directory to jump to' \
+  --color header:#cba6f7"
+
+# ==========================================================
+# Enhanced Tab Completion (fzf-tab)
+# ==========================================================
+
+# Disable sort when completing `git checkout`
+zstyle ':completion:*:git-checkout:*' sort false
+
+# Set descriptions format to enable group support
+zstyle ':completion:*:descriptions' format '[%d]'
+
+# Preview for files and directories
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always --icons "$realpath"'
+zstyle ':fzf-tab:complete:cat:*' fzf-preview 'bat -n --color=always --line-range :500 "$realpath"'
+zstyle ':fzf-tab:complete:bat:*' fzf-preview 'bat -n --color=always --line-range :500 "$realpath"'
+zstyle ':fzf-tab:complete:nvim:*' fzf-preview 'bat -n --color=always --line-range :500 "$realpath"'
+zstyle ':fzf-tab:complete:vim:*' fzf-preview 'bat -n --color=always --line-range :500 "$realpath"'
+
+# Preview for kill command
+zstyle ':fzf-tab:complete:(kill|ps):argument-rest' fzf-preview \
+  '[[ $group == *"process"* ]] && ps -p $word -o cmd --no-headers -w -w'
+zstyle ':fzf-tab:complete:(kill|ps):argument-rest' fzf-flags --preview-window=down:3:wrap
+
+# Preview for environment variables
+zstyle ':fzf-tab:complete:(-command-|-parameter-|-brace-parameter-|export|unset|expand):*' \
+  fzf-preview 'echo ${(P)word}'
+
+# Preview for jj (Jujutsu)
+zstyle ':fzf-tab:complete:jj-(diff|show):*' fzf-preview \
+  'jj diff $word'
+zstyle ':fzf-tab:complete:jj-log:*' fzf-preview \
+  'jj log --color=always -r $word'
+zstyle ':fzf-tab:complete:jj-show:*' fzf-preview \
+  'jj show --color=always $word'
+zstyle ':fzf-tab:complete:jj-(edit|new|squash):*' fzf-preview \
+  'jj log --color=always -r $word'
+zstyle ':fzf-tab:complete:jj-file:*' fzf-preview \
+  'bat -n --color=always --line-range :500 $word'
+
+# Preview for git (if you still use it occasionally)
+zstyle ':fzf-tab:complete:git-(add|diff|restore):*' fzf-preview \
+  'git diff $word | delta'
+zstyle ':fzf-tab:complete:git-log:*' fzf-preview \
+  'git log --color=always $word'
+zstyle ':fzf-tab:complete:git-show:*' fzf-preview \
+  'git show --color=always $word | delta'
+zstyle ':fzf-tab:complete:git-checkout:*' fzf-preview \
+  'case "$group" in
+    "modified file") git diff $word | delta ;;
+    "recent commit object name") git show --color=always $word | delta ;;
+    *) git log --color=always $word ;;
+  esac'
+
+# Switch group using `<` and `>`
+zstyle ':fzf-tab:*' switch-group '<' '>'
+
+# Apply Catppuccin Mocha colors to fzf-tab
+zstyle ':fzf-tab:*' fzf-flags \
+  --color=bg+:#313244,bg:#1e1e2e,spinner:#f5e0dc,hl:#f38ba8 \
+  --color=fg:#cdd6f4,header:#f38ba8,info:#cba6f7,pointer:#f5e0dc \
+  --color=marker:#b4befe,fg+:#cdd6f4,prompt:#cba6f7,hl+:#f38ba8 \
+  --color=selected-bg:#45475a \
+  --prompt='⚡ ' \
+  --pointer='▶' \
+  --marker='✓'
+
+# Continuous completion
+zstyle ':fzf-tab:*' continuous-trigger '/'
 
 # --- Vi-Mode & Keybindings ---
 # Enable Vi-mode
@@ -130,13 +244,51 @@ alias -g -- --help='--help | bat -plhelp'
 
 # Sesh (Session Manager)
 function s() {
-  {
-    exec < /dev/tty
-    exec <&1
-    local session
-    session=$(sesh list -i | gum filter --limit 1 --placeholder 'Pick a sesh' --height 50 --prompt='⚡')
-    [[ -n "$session" ]] && sesh connect "$session"
-  }
+  local session
+  
+  session=$(sesh list -i | \
+    awk '
+      /\[34m/ && !tmux_seen { 
+        print "\033[1;35m━━━━━━━━ TMUX SESSIONS ━━━━━━━━\033[0m"
+        tmux_seen = 1 
+      }
+      /\[33m/ && !tmuxinator_seen { 
+        print ""
+        print "\033[1;35m━━━━━━ TMUXINATOR ━━━━━━\033[0m"
+        tmuxinator_seen = 1 
+      }
+      /\[36m/ && !zoxide_seen { 
+        print ""
+        print "\033[1;35m━━━━━━━━ ZOXIDE ━━━━━━━━━\033[0m"
+        zoxide_seen = 1 
+      }
+      { print }
+    ' | \
+    fzf \
+    --prompt='⚡ Session › ' \
+    --header='󱂬 ENTER (connect) · CTRL-Y (copy) · CTRL-/ (help)' \
+    --border=rounded \
+    --border-label=' Sesh Session Manager ' \
+    --height=70% \
+    --layout=reverse \
+    --info=inline \
+    --margin=1,3 \
+    --padding=1 \
+    --ansi \
+    --color='fg:#cdd6f4,bg:#1e1e2e,hl:#89b4fa' \
+    --color='fg+:#cdd6f4,bg+:#313244,hl+:#89dceb' \
+    --color='info:#cba6f7,prompt:#89dceb,pointer:#f38ba8' \
+    --color='marker:#a6e3a1,spinner:#f5e0dc,header:#cba6f7' \
+    --pointer='▶' \
+    --marker='✓' \
+    --bind='ctrl-y:execute-silent(echo -n {} | sed "s/\x1b\[[0-9;]*m//g" | pbcopy)+abort' \
+    --bind='ctrl-/:toggle-header' \
+    --no-multi \
+    --cycle | \
+    grep -v "━━━━"
+  )
+  
+  [[ -n "$session" ]] && sesh connect "$session"
 }
 
 # Neovim
@@ -145,7 +297,7 @@ alias vim='nvim'
 
 # Config editing shortcuts
 alias zshconfig="nvim ~/.zshrc"
-alias ompconfig="nvim ~/.config/oh-my-posh/bubblesextra.omp.toml"
+alias ompconfig="nvim ~/.config/oh-my-posh/oh-my-posh.toml"
 alias ghosttyconfig="nvim ~/.config/ghostty/config"
 
 # Yazi Shell Wrapper
@@ -155,6 +307,74 @@ function y() {
 	IFS= read -r -d '' cwd < "$tmp"
 	[ -n "$cwd" ] && [ "$cwd" != "$PWD" ] && builtin cd -- "$cwd"
 	rm -f -- "$tmp"
+}
+
+# ==========================================================
+# Additional Useful Functions
+# ==========================================================
+
+# Enhanced cd with fzf - interactive directory selection
+function cdi() {
+  local dir
+  dir=$(fd --type d --follow --exclude .git --exclude node_modules --exclude .venv \
+    --exclude Library --exclude Applications --exclude Desktop --exclude Downloads \
+    --exclude Movies --exclude Music --exclude Pictures --exclude Public --exclude .Trash \
+    . "$HOME" | \
+    fzf --prompt='  ' \
+        --header='Select directory (from ~)' \
+        --border-label=' Change Directory ' \
+        --preview 'eza --tree --level=2 --icons --color=always {}' \
+        --bind 'ctrl-/:toggle-preview')
+  [[ -n "$dir" ]] && cd "$dir"
+}
+
+# Quick edit with fzf - find and edit files
+function vf() {
+  local file
+  file=$(fd --type f --hidden --exclude .git --exclude node_modules | \
+    fzf --prompt='  ' \
+        --header='Select file to edit' \
+        --border-label=' Edit File ' \
+        --preview 'bat -n --color=always --line-range :500 {}' \
+        --bind 'ctrl-/:toggle-preview')
+  [[ -n "$file" ]] && nvim "$file"
+}
+
+# Process killer with fzf
+function fkill() {
+  local pid
+  pid=$(ps -ef | sed 1d | fzf -m --header='Select process to kill' | awk '{print $2}')
+  if [[ -n "$pid" ]]; then
+    echo "$pid" | xargs kill -"${1:-9}"
+  fi
+}
+
+# JJ: Interactive change switcher
+function jjsw() {
+  local change
+  change=$(jj log --no-graph --color=always -r 'all()' -T 'change_id.short() ++ " " ++ description.first_line()' | \
+    fzf --ansi \
+        --prompt='  ' \
+        --header='Select change to edit' \
+        --border-label=' JJ Changes ' \
+        --preview 'jj show --color=always -r {1}' \
+        --preview-window=right:60% \
+        --bind 'ctrl-/:toggle-preview' | \
+    awk '{print $1}')
+  [[ -n "$change" ]] && jj edit "$change"
+}
+
+# JJ: Interactive file selection for diff
+function jjf() {
+  local file
+  file=$(jj file list | \
+    fzf --prompt='  ' \
+        --header='Select file to view diff' \
+        --border-label=' JJ Files ' \
+        --preview 'jj diff {}' \
+        --preview-window=right:60% \
+        --bind 'ctrl-/:toggle-preview')
+  [[ -n "$file" ]] && echo "$file"
 }
 
 # >>> conda initialize >>>
