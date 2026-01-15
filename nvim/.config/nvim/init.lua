@@ -968,7 +968,13 @@ require('lazy').setup({
       fuzzy = { implementation = 'prefer_rust_with_warning' },
 
       -- Shows a signature help window while you type arguments for a function
-      signature = { enabled = true },
+      signature = {
+        enabled = true,
+        window = {
+          border = 'rounded',
+          winhighlight = 'Normal:NONE,FloatBorder:NONE',
+        },
+      },
     },
   },
 
@@ -985,6 +991,11 @@ require('lazy').setup({
       require('catppuccin').setup {
         flavour = 'mocha', -- latte, frappe, macchiato, mocha
         transparent_background = true,
+        custom_highlights = function(colors)
+          return {
+            LspSignatureActiveParameter = { bold = true, bg = colors.surface1 },
+          }
+        end,
         integrations = {
           mason = true,
           neotree = true,
