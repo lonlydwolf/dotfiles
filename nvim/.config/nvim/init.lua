@@ -754,6 +754,28 @@ require('lazy').setup({
             },
           },
         },
+
+        -- cspell-lsp (configured as 'cspell' in nvim-lspconfig)
+        cspell = {
+          filetypes = {
+            'gitcommit',
+            'markdown',
+            'text',
+            'plaintext',
+            'javascript',
+            'typescript',
+            'javascriptreact',
+            'typescriptreact',
+            'lua',
+            'python',
+            'rust',
+            'go',
+            'css',
+            'html',
+          },
+          -- cspell-lsp typically uses a custom config or standard config.
+          -- We can enforce settings here if needed, but defaults are usually good.
+        },
       }
 
       -- Ensure the servers and tools above are installed
@@ -774,6 +796,8 @@ require('lazy').setup({
         'stylua', -- Used to format Lua code
         'prettier', -- Used to format Json files
         'markdownlint',
+        'cspell',
+        'cspell-lsp',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
