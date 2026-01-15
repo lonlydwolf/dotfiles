@@ -1046,9 +1046,9 @@ require('lazy').setup({
       ai.setup {
         n_lines = 500,
         custom_textobjects = {
-          f = ai.gen_spec.treesitter({ a = '@function.outer', i = '@function.inner' }),
-          c = ai.gen_spec.treesitter({ a = '@class.outer', i = '@class.inner' }),
-          a = ai.gen_spec.treesitter({ a = '@parameter.outer', i = '@parameter.inner' }),
+          f = ai.gen_spec.treesitter { a = '@function.outer', i = '@function.inner' },
+          c = ai.gen_spec.treesitter { a = '@class.outer', i = '@class.inner' },
+          a = ai.gen_spec.treesitter { a = '@parameter.outer', i = '@parameter.inner' },
         },
       }
 
@@ -1083,7 +1083,6 @@ require('lazy').setup({
       --  Check out: https://github.com/echasnovski/mini.nvim
     end,
   },
-
 
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
