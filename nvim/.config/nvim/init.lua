@@ -1079,6 +1079,11 @@ require('lazy').setup({
       -- - Uses Treesitter to understand code blocks.
       require('mini.indentscope').setup()
 
+      -- MOVE LINES:
+      -- - Alt+hjkl to move lines in Normal/Visual mode.
+      -- - Auto-indents and handles undo history correctly.
+      require('mini.move').setup()
+
       -- ... and there is more!
       --  Check out: https://github.com/echasnovski/mini.nvim
     end,
