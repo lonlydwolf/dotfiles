@@ -728,6 +728,9 @@ require('lazy').setup({
         -- TypeScript :
         vtsls = {},
 
+        -- PHP :
+        intelephense = {},
+
         -- clangd = {},
         -- gopls = {},
         -- pyright = {},
@@ -798,6 +801,9 @@ require('lazy').setup({
         'markdownlint',
         'cspell',
         'cspell-lsp',
+        'intelephense',
+        'phpcs',
+        'phpcbf',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -850,6 +856,7 @@ require('lazy').setup({
       end,
       formatters_by_ft = {
         lua = { 'stylua' },
+        php = { 'phpcbf' },
         -- Conform can also run multiple formatters sequentially
         python = { 'ruff_format' },
 
