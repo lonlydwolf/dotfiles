@@ -4,7 +4,7 @@ colourful: true
 filekinds:
   normal: {foreground: "#cdd6f4"}
   directory: {foreground: "#89b4fa"}
-  symlink: {foreground: "#89b4fa"}
+  symlink: {foreground: "#89dceb"}
   pipe: {foreground: "#bac2de"}
   block_device: {foreground: "#eba0ac"}
   char_device: {foreground: "#eba0ac"}
