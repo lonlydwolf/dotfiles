@@ -25,3 +25,5 @@ done
 [[ -f ~/.config/zsh/.zshenv ]] && source ~/.config/zsh/.zshenv
 
 unset _zshrc_config_file
+unset LS_COLORS
+unset EZA_COLORS
