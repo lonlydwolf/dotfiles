@@ -18,4 +18,7 @@ alias zshreload="source ~/.zshrc"
 alias ompconfig="nvim ~/.config/oh-my-posh/oh-my-posh.toml"
 alias ghosttyconfig="nvim ~/.config/ghostty/config"
 
+# Custom use aliases
+alias tmux-clear='tmux list-panes -a -F "#{pane_id}" | xargs -I {} tmux send-keys -t {} "clear" Enter'
+
 debug_log "Aliases loaded"

@@ -1,3 +1,5 @@
+.zsh_history*
+.zcompdump*
 yazi/.config/yazi/plugins/*
 !yazi/.config/yazi/plugins/folder-rules.yazi/
 oh-my-posh/.config/oh-my-posh/init.zsh
