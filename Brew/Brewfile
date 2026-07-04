@@ -1,14 +1,18 @@
+tap "anomalyco/tap"
 tap "grishka/grishka"
 tap "jandedobbeleer/oh-my-posh"
 tap "oven-sh/bun"
 tap "r-lib/rig"
 tap "tw93/tap"
+tap "typewhisper/tap"
 # Bourne-Again SHell, a UNIX command interpreter
 brew "bash"
 # Clone of cat(1) with syntax highlighting and Git integration
 brew "bat"
 # Bash scripts that integrate bat with various command-line tools
 brew "bat-extras"
+# Remove large files or passwords from Git history like git-filter-branch
+brew "bfg"
 # Resource monitor. C++ version and continuation of bashtop and bpytop
 brew "btop"
 # Multi-shell multi-command argument completer
@@ -17,6 +21,10 @@ brew "carapace"
 brew "cmake"
 # Console Matrix
 brew "cmatrix"
+# General-purpose scripting language
+brew "php"
+# Dependency Manager for PHP
+brew "composer"
 # Securely send things from one computer to another
 brew "croc"
 # Run arbitrary commands when files change
@@ -25,10 +33,14 @@ brew "entr"
 brew "eza"
 # Simple, fast and user-friendly alternative to find
 brew "fd"
-# Play, record, convert, and stream audio and video
+# Play, record, convert, and stream select audio and video codecs
 brew "ffmpeg"
 # Command-line fuzzy finder written in Go
 brew "fzf"
+# GNU compiler collection
+brew "gcc"
+# GitHub command-line tool
+brew "gh"
 # Syntax-highlighting pager for git and diff output
 brew "git-delta"
 # Open source programming language to build simple/reliable/efficient software
@@ -39,7 +51,7 @@ brew "grc"
 brew "gum"
 # Improved colored diff
 brew "icdiff"
-# Tools and libraries to manipulate images in many formats
+# Tools and libraries to manipulate images in select formats
 brew "imagemagick"
 # Interactive computing in Python
 brew "ipython"
@@ -63,10 +75,8 @@ brew "neovim"
 brew "node"
 # Modern shell for the GitHub era
 brew "nushell"
-# Search tool like grep and The Silver Searcher
-brew "ripgrep"
-# AI coding agent, built for the terminal
-brew "opencode"
+# Create, run, and share large language models (LLMs)
+brew "ollama"
 # Painless compression and decompression for your terminal
 brew "ouch"
 # Fast, disk space efficient package manager
@@ -75,6 +85,8 @@ brew "pnpm"
 brew "poppler"
 # SVG rendering tool and library
 brew "resvg"
+# Search tool like grep and The Silver Searcher
+brew "ripgrep"
 # Extremely fast Python linter, written in Rust
 brew "ruff"
 # Safe, concurrent, practical language
@@ -111,6 +123,12 @@ brew "uv"
 brew "watch"
 # Internet file retriever
 brew "wget"
+# Tools for the WireGuard secure network tunnel
+brew "wireguard-tools"
+# Command-line interface for WordPress
+brew "wp-cli"
+# Bring your favorite shell wherever you go through the ssh
+brew "xxh"
 # Blazing fast terminal file manager written in Rust, based on async I/O
 brew "yazi"
 # Pluggable terminal workspace, with terminal multiplexer as the base feature
@@ -121,6 +139,8 @@ brew "zoxide"
 brew "zsh-autosuggestions"
 # Feature-rich syntax highlighting for Zsh
 brew "zsh-fast-syntax-highlighting"
+# The AI coding agent built for the terminal.
+brew "anomalyco/tap/opencode"
 # Prompt theme engine for any shell
 brew "jandedobbeleer/oh-my-posh/oh-my-posh"
 # Incredibly fast JavaScript runtime, bundler, transpiler and package manager - all in one.
@@ -135,6 +155,8 @@ cask "anaconda"
 cask "android-file-transfer"
 # Android SDK component
 cask "android-platform-tools"
+# Tool to flash OS images to SD cards & USB drives
+cask "balenaetcher"
 # Web browser focusing on privacy
 cask "brave-browser"
 # Anthropic's official Claude AI desktop app
@@ -143,10 +165,14 @@ cask "claude"
 cask "claude-code"
 # OpenAI's coding agent that runs in your terminal
 cask "codex"
+# Window peeking utility app
+cask "dockdoor"
 # App to build and share containerised applications and microservices
 cask "docker-desktop"
-# VPN client for secure internet access and private browsing
+# VPN client for secure and private internet access
 cask "expressvpn"
+# Collaborative team software
+cask "figma"
 cask "font-jetbrains-mono-nerd-font"
 # Download accelerator and organiser
 cask "free-download-manager"
@@ -158,26 +184,34 @@ cask "ghostty"
 cask "google-chrome"
 # Client for the Google Drive storage service
 cask "google-drive"
+# Native desktop AI assistant from Google
+cask "google-gemini"
 # Utility to hide menu bar items
 cask "hiddenbar"
+# Convert your caps lock key or any of your modifier keys to the hyper key
+cask "hyperkey"
 # Terminal emulator as alternative to Apple's Terminal app
 cask "iterm2"
 # Open-source keystroke visualiser
 cask "keycastr"
+# WordPress local development tool by Flywheel
+cask "local"
 # Unofficial Google Nearby Share app
-cask "neardrop"
-# App to write, plan, collaborate, and get organised
-cask "notion"
+cask "grishka/grishka/neardrop"
 # Knowledge base that works on top of a local folder of plain text Markdown files
 cask "obsidian"
+# Get up and running with large language models locally
+cask "ollama-app"
 # VPN client focusing on security
 cask "protonvpn"
+# All-in-one bookmark manager
+cask "raindropio"
 # Control your tools with a few keystrokes
 cask "raycast"
 # Move and resize windows using keyboard shortcuts or snap areas
 cask "rectangle"
 # The R Installation Manager
-cask "rig"
+cask "r-lib/rig/rig"
 # Team communication and collaboration software
 cask "slack"
 # System monitor for the menu bar
@@ -188,6 +222,8 @@ cask "steam"
 cask "telegram"
 # Unpacks archive files
 cask "the-unarchiver"
+# Speech-to-text and AI text processing for macOS
+cask "typewhisper/tap/typewhisper"
 # Open-source code editor
 cask "visual-studio-code"
 # Multimedia player
@@ -197,14 +233,16 @@ cask "warp"
 # Native desktop client for WhatsApp
 cask "whatsapp"
 mas "Folder Preview", id: 6698876601
+mas "Keynote", id: 361285480
 mas "Markdown Preview", id: 6739955340
+mas "Pages", id: 361309726
+mas "Tailscale", id: 1475387142
 mas "Toggl Track", id: 1291898086
 mas "V2BOX", id: 6446814690
 mas "X-VPN", id: 1454212375
 mas "Xcode", id: 497799835
 vscode "eamodio.gitlens"
 vscode "formulahendry.code-runner"
-vscode "github.copilot"
 vscode "github.copilot-chat"
 vscode "github.github-vscode-theme"
 vscode "kevinrose.vsc-python-indent"
@@ -225,3 +263,4 @@ vscode "pkief.material-icon-theme"
 vscode "streetsidesoftware.code-spell-checker"
 vscode "tal7aouy.theme"
 vscode "vscode-icons-team.vscode-icons"
+uv "basedpyright"
