@@ -23,7 +23,7 @@
 
 # Disable specific steps - same options as the command line flag
 # disable = ["system", "emacs"]
-disable = ["git_repos", "containers"]
+disable = ["git_repos", "containers", "pnpm", "claude_code", "vcpkg"]
 
 # Ignore failures for these steps
 # ignore_failures = ["powershell"]
