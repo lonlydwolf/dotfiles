@@ -13,6 +13,7 @@ return {
       local wanted_parsers = {
         'bash',
         'c',
+        'cpp',
         'css',
         'csv',
         'diff',

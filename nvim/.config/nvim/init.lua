@@ -737,7 +737,19 @@ require('lazy').setup({
         -- PHP :
         intelephense = {},
 
-        -- clangd = {},
+        clangd = {
+          cmd = {
+            'clangd',
+            '--background-index',
+            '--clang-tidy',
+            '--header-insertion=never',
+            '--completion-style=detailed',
+            '--function-arg-placeholders',
+            '--fallback-style=llvm',
+            '--query-driver=/usr/bin/clang++,/usr/bin/clang,/usr/bin/gcc,/usr/bin/g++',
+            '--extra-arg=-std=c++20',
+          },
+        },
         -- gopls = {},
         -- pyright = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
@@ -850,7 +862,7 @@ require('lazy').setup({
         -- Disable "format_on_save lsp_fallback" for languages that don't
         -- have a well standardized coding style. You can add additional
         -- languages here or re-enable it for the disabled ones.
-        local disable_filetypes = { c = true, cpp = true }
+        local disable_filetypes = {  }
         if disable_filetypes[vim.bo[bufnr].filetype] then
           return nil
         else
@@ -861,6 +873,9 @@ require('lazy').setup({
         end
       end,
       formatters_by_ft = {
+
+        cpp = { 'clang-format' },
+
         lua = { 'stylua' },
         php = { 'phpcbf' },
         -- Conform can also run multiple formatters sequentially

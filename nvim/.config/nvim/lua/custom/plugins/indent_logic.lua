@@ -36,14 +36,35 @@ return {
         end,
       })
 
-      -- 4-Space Languages (Python/Black default, Rust, C-family)
+      -- 2-Space Languages (Prettier default, JS/TS ecosystem, Lua, Web, C-family)
+      vim.api.nvim_create_autocmd('FileType', {
+        group = indent_group,
+        pattern = {
+          'javascript',
+          'javascriptreact',
+          'typescript',
+          'typescriptreact',
+          'json',
+          'html',
+          'css',
+          'scss',
+          'lua',
+          'yaml',
+          'markdown',
+          'c',
+          'cpp',
+        },
+        callback = function()
+          set_indent(2)
+        end,
+      })
+
+      -- 4-Space Languages (Python/Black default, Rust, Java, C#)
       vim.api.nvim_create_autocmd('FileType', {
         group = indent_group,
         pattern = {
           'python',
           'rust',
-          'c',
-          'cpp',
           'java',
           'cs', -- C#
         },
