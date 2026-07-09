@@ -1,0 +1,5 @@
+---
+# TODO Phase 3-4: chezmoi apply in place (configured sourceDir, never `chezmoi init <user>`)
+- name: dotfiles placeholder
+  ansible.builtin.debug:
+    msg: "dotfiles role — TODO Build Phases 3-4"

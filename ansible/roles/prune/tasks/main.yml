@@ -1,0 +1,6 @@
+---
+# TODO Phase 2: double-gated cleanup. Gate 2 = `when: prune_force | bool` on the
+# destructive task (brew bundle cleanup / pacman drift); list-only without it.
+- name: prune placeholder
+  ansible.builtin.debug:
+    msg: "prune role — TODO Build Phase 2 (prune_force={{ prune_force }})"

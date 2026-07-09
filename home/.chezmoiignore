@@ -1,0 +1,3 @@
+{{/* templated — per-OS ignores added in Build Phase 3 */}}
+# never manage chezmoi's own dir (holds the age key + generated config)
+.config/chezmoi/**

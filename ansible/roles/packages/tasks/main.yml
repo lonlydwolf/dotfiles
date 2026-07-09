@@ -1,0 +1,5 @@
+---
+# TODO Phase 2: brew bundle (~/.config/Brew/Brewfile) + mise install (audit/converge split)
+- name: packages placeholder
+  ansible.builtin.debug:
+    msg: "packages role — TODO Build Phase 2"

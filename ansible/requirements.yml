@@ -1,0 +1,4 @@
+---
+# cold ansible-core lacks community.general — bootstrap installs this
+collections:
+  - name: community.general

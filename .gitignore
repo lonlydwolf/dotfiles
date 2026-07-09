@@ -1,0 +1,6 @@
+# self-built binaries build here but install to ~/.local/bin — never commit them
+target/
+
+.DS_Store
+*.swp
+*.log
