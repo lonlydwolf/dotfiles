@@ -1,0 +1,32 @@
+[[mgr.prepend_keymap]]
+on = "<C-p>"
+run = "shell --orphan -- quicklook %s"
+
+# Plugin: chmod
+[[mgr.prepend_keymap]]
+on = [ "c", "m" ]
+run = "plugin chmod"
+desc = "Chmod on selected files"
+
+# Plugin: ouch (Compression)
+[[mgr.prepend_keymap]]
+on = [ "C" ]
+run = "plugin ouch"
+desc = "Compress with ouch"
+
+# Git: cd to root
+[[mgr.prepend_keymap]]
+on = [ "g", "r" ]
+run = 'shell -- ya emit cd "$(git rev-parse --show-toplevel)"'
+desc = "Go to git root"
+
+# Smart Enter
+[[mgr.prepend_keymap]]
+on = [ "l" ]
+run = "plugin smart-enter"
+desc = "Enter directory or open file"
+
+[[mgr.prepend_keymap]]
+on = [ "<Enter>" ]
+run = "plugin smart-enter"
+desc = "Enter directory or open file"

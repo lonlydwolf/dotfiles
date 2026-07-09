@@ -1,0 +1,157 @@
+# ==============================================================================
+# Global Layout Adjustments
+# ==============================================================================
+command_timeout = 500
+palette = "default"
+continuation_prompt = "[▶▶ ](fg:#585b70)"
+# add_newline = false
+
+# Combined two-line layout with structured connecting lines
+format = """
+[╭─](fg:surface1)\
+$os\
+$username\
+$hostname\
+[\uE0B4](fg:surface1)\
+[─](fg:surface1)\
+$directory\
+[─](fg:surface1)\
+$status\
+$cmd_duration\
+$fill\
+${custom.git}\
+${custom.jj_native}\
+$line_break\
+[╰─](fg:surface1)\
+$character"""
+
+right_format = """"""
+
+# ==============================================================================
+# Color Palette (Catppuccin Mocha)
+# ==============================================================================
+[palettes.default]
+text = "#cdd6f4"
+crust = "#11111b"
+surface0 = "#313244" # Dark pill chambers
+surface1 = "#45475a" # Light pill chambers & frame lines
+green = "#a6e3a1"    # Insert Mode / Success
+blue = "#89b4fa"     # Normal Mode / OS & Directory Icon
+mauve = "#cba6f7"    # Visual Mode / Git & Hostname
+red = "#f38ba8"      # Replace Mode / Errors / Root
+
+teal = "#94e2d5"     # Git Ahead/Behind sync status (Blue-Green)
+sapphire = "#74c7ec" # Deep blue for Git branch icon
+peach = "#fab387"    # Git Dirty/Modified status warning
+
+# ==============================================================================
+# Left Prompt Segments (Pill 1: OS, User, Host)
+# ==============================================================================
+
+[os]
+disabled = false
+style = "bg:surface0 fg:white"
+format = "[\uE0B6](fg:surface0)[ $symbol ]($style)"
+
+[os.symbols]
+Macos = "\uE711"
+Arch = "\U000F08C7"   # 5-digit hex codes require uppercase \\U padding
+Ubuntu = "\U000F0548" # 5-digit hex codes require uppercase \\U padding
+Fedora = "\uE7D9"
+
+[username]
+show_always = true
+style_user = "bg:surface1 fg:text"
+style_root = "bg:surface1 fg:red"
+format = "[\uE0B4](bg:surface1 fg:surface0)[ $user ]($style)"
+
+[hostname]
+ssh_only = true
+style = "bg:surface1 fg:mauve"
+format = "[\uE0B4](fg:surface0 bg:surface1)[@$hostname ]($style)"
+
+# ==============================================================================
+# Left Prompt Segments (Pill 2 & Pill 3)
+# ==============================================================================
+
+[directory]
+style = "bg:surface1 fg:text"
+format = "[\uE0B6](fg:surface0)[ \uF07B ](bg:surface0 fg:blue)[\uE0B4](bg:surface1 fg:surface0)[ $path ]($style)[\uE0B4](fg:surface1)"
+truncation_length = 1
+fish_style_pwd_dir_length = 1
+
+[status]
+disabled = false
+success_symbol = "[\uF00C](bg:surface0 fg:green)"
+symbol = "[\uF00D](bg:surface0 fg:red)"
+format = "[\uE0B6](fg:surface0)$symbol"
+
+[cmd_duration]
+min_time = 0
+show_milliseconds = true
+style = "bg:surface1 fg:text"
+format = "[\uE0B4](bg:surface1 fg:surface0)[ $duration ]($style)[\uE0B4](fg:surface1)"
+
+# ==============================================================================
+# Structural Fill
+# ==============================================================================
+
+[fill]
+symbol = "─"
+style = "fg:surface1"
+
+# ==============================================================================
+# Theme-Matched Character Input (Line 2)
+# ==============================================================================
+
+[character]
+disabled = false
+success_symbol = "[❯ ](bold fg:#a6e3a1)"            # Insert Mode (Success)
+error_symbol = "[❯ ](bold fg:#f38ba8)"              # Insert Mode (Error)
+vimcmd_symbol = "[❮ ](bold fg:#89b4fa)"             # Normal Mode
+vimcmd_visual_symbol = "[𝝠 ](bold fg:#cba6f7)"      # Visual Mode
+vimcmd_replace_symbol = "[𝝮 ](bold fg:#f9e2af)"     # Replace Mode (Yellow)
+vimcmd_replace_one_symbol = "[𝝮 ](bold fg:#eba0ac)" # Replace One Mode (Maroon)
+
+# ==============================================================================
+# Version Control Segments (Right Aligned)
+# ==============================================================================
+
+[custom.git]
+command = "starship module git_branch && starship module git_state && starship module git_status"
+when = "git rev-parse --is-inside-work-tree >/dev/null 2>&1 && ! jj root >/dev/null 2>&1"
+format = "$output[\uE0B4](fg:surface1)"
+
+[git_branch]
+style = "bg:surface1 fg:text"
+format = "[\uE0B6](fg:surface0)[  ](bg:surface0 fg:sapphire)[\uE0B4](bg:surface1 fg:surface0)[ $branch ]($style)"
+truncation_length = 24
+truncation_symbol = "…"
+
+[git_status]
+style = "bg:surface1 fg:text"
+format = "[ $all_status$ahead_behind]($style)"
+ahead = "[ ](bg:surface1 fg:teal)"
+behind = "[ ](bg:surface1 fg:teal)"
+diverged = "[󰹹 ](bg:surface1 fg:peach)"
+conflicted = "[ ](bg:surface1 fg:red)"
+untracked = "[ ](bg:surface1 fg:mauve)"
+stashed = "[ ](bg:surface1 fg:blue)"
+modified = "[󰏫 ](bg:surface1 fg:peach)"
+staged = "[ ](bg:surface1 fg:green)"
+renamed = "[󰕕 ](bg:surface1 fg:blue)"
+deleted = "[ ](bg:surface1 fg:red)"
+
+[git_state]
+style = "bg:surface1 fg:red bold"
+format = "[ $state( $progress_current/$progress_total)]($style)"
+
+[git_metrics]
+disabled = true
+
+[custom.jj_native]
+disabled = false
+detect_folders = [".jj"]
+command = "starship-jj"
+style = "bg:surface1 fg:text"
+format = "[\uE0B6](fg:surface0)[ \ue702 ](bg:surface0 fg:mauve)[\uE0B4](bg:surface1 fg:surface0)[ $output ]($style)[\uE0B4](fg:surface1)"

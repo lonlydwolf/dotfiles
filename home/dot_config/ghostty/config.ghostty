@@ -1,0 +1,102 @@
+# ============================================================
+# Ghostty Configuration - "Matte Bubble (Catppuccin Mocha)"
+# ============================================================
+ 
+shell-integration = zsh
+
+# --- Visual Theme ---
+# Official Catppuccin Mocha
+background = #1e1e2e
+foreground = #cdd6f4
+selection-background = #353749
+selection-foreground = #cdd6f4
+split-divider-color = #313244
+
+# Palette
+palette = 0=#45475a
+palette = 1=#f38ba8
+palette = 2=#a6e3a1
+palette = 3=#f9e2af
+palette = 4=#89b4fa
+palette = 5=#f5c2e7
+palette = 6=#94e2d5
+palette = 7=#a6adc8
+palette = 8=#585b70
+palette = 9=#f38ba8
+palette = 10=#a6e3a1
+palette = 11=#f9e2af
+palette = 12=#89b4fa
+palette = 13=#f5c2e7
+palette = 14=#94e2d5
+palette = 15=#bac2de
+
+# Cursor styling
+cursor-color = #f5e0dc
+cursor-text = #11111b
+cursor-style = block
+cursor-style-blink = true
+
+# --- Typography ---
+font-family = JetBrainsMono Nerd Font
+font-style = Medium Italic
+font-feature = calt,liga,dlig
+font-size = 14
+adjust-cell-height = 30%
+window-title-font-family = JetBrainsMono Nerd Font
+
+# --- Window Aesthetics ---
+# Matte Glassy Feel
+background-opacity = 0.85
+background-blur-radius = 30
+window-padding-x = 15
+window-padding-y = 15
+macos-titlebar-style = tabs
+mouse-hide-while-typing = true
+window-step-resize = true
+#adjust-cell-height = 1
+
+# --- MacOS Keybinding ---
+macos-option-as-alt = left
+
+# Tmux actions 
+# Mapping Cmd+T to New tmux Window (Prefix + c)
+keybind = super+t=text:\x01c
+
+# Mapping Cmd+W to Close tmux Pane (Prefix + x)
+keybind = super+w=text:\x01x
+
+# Mapping Cmd+Z to Zoom tmux Pane (Prefix + z)
+keybind = super+z=text:\x01z
+
+# Mapping Cmd+[ and Cmd+] for Window Navigation (Prefix + p/n)
+keybind = super+physical:left_bracket=text:\x01p
+keybind = super+physical:right_bracket=text:\x01n
+
+# Mapping Cmd+o to Open tmux-sessionx (Prefix + o)
+keybind = super+o=text:\x01o
+
+# Mapping Cmd+k to Open sesh (Prefix + K) 
+keybind = super+k=text:\x01K
+
+# Mapping Cmd+j to Open super sesh (Prefix + J) 
+keybind = super+j=text:\x01J
+
+# Mapping Cmd+d to Detach from tmux (Prefix + d)
+keybind = super+d=text:\x01d
+
+# Mapping Cmd+{1-91} to Select tmux Window (Prefix + {2-9})
+keybind = super+physical:one=text:\x011
+keybind = super+physical:two=text:\x012
+keybind = super+physical:three=text:\x013
+keybind = super+physical:four=text:\x014
+keybind = super+physical:five=text:\x015
+keybind = super+physical:six=text:\x016
+keybind = super+physical:seven=text:\x017
+keybind = super+physical:eight=text:\x018
+keybind = super+physical:nine=text:\x019
+
+# Mapping Cmd+r to Reload tmux Config (Prefix + r)
+keybind = super+r=text:\x01r
+
+
+

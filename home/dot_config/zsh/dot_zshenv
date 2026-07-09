@@ -1,0 +1,60 @@
+# ~/.config/zsh/.zshenv
+typeset -U path PATH
+# ---------- XDG base directories ----------
+# Centralizes config/cache/data locations
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_CACHE_HOME="$HOME/.cache"
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_STATE_HOME="$HOME/.local/state"
+
+# ---------- Editor ----------
+# Default editor used by git, jj, etc.
+export EDITOR="nvim"
+export VISUAL="nvim"
+
+# ---------- Starship ----------
+export STARSHIP_CONFIG="$XDG_CONFIG_HOME/starship/starship.toml"
+
+# ---------- PATH ----------
+# Personal binaries/scripts
+export PATH="$HOME/.local/bin:$PATH"
+
+
+# ---------- Future-Proofing Language Ecosystems ---------------------------------------------------------------------------------------
+# Rust / Cargo
+export CARGO_HOME="$XDG_DATA_HOME/cargo"
+export RUSTUP_HOME="$XDG_DATA_HOME/rustup"
+export PATH="$CARGO_HOME/bin:$PATH"
+
+# Go (Forces all future Go binaries and caches out of ~)
+export GOPATH="$XDG_DATA_HOME/go"
+export GOMODCACHE="$XDG_CACHE_HOME/go/mod"
+export PATH="$GOPATH/bin:$PATH"
+
+# Node / NPM / Bun
+export NPM_CONFIG_USERCONFIG="$XDG_CONFIG_HOME/npm/npmrc"
+export NODE_REPL_HISTORY="$XDG_DATA_HOME/node_history"
+export BUN_INSTALL_DIR="$XDG_DATA_HOME/bun"
+
+# Python / Pip
+export PIP_CACHE_DIR="$XDG_CACHE_HOME/pip"
+export PYTHONSTARTUP="$XDG_CONFIG_HOME/python/pythonrc"
+
+# Common DevOps / Terminal Tools
+export DOCKER_CONFIG="$XDG_CONFIG_HOME/docker"
+export AWS_SHARED_CREDENTIALS_FILE="$XDG_CONFIG_HOME/aws/credentials"
+export AWS_CONFIG_FILE="$XDG_CONFIG_HOME/aws/config"
+
+# C / C++ Toolchains
+# Prevents compiler cache from dumping into ~/.ccache
+export CCACHE_DIR="$XDG_CACHE_HOME/ccache"
+# Forces CMake to store local configurations cleanly
+export CMAKE_USER_CONFIG_DIR="$XDG_CONFIG_HOME/cmake"
+
+# Android SDK & Emulator
+# Moves the ~/.android folder (AVDs, emulator keys, debug keystores)
+export ANDROID_USER_HOME="$XDG_DATA_HOME/android"
+# Moves the default ~/Android/Sdk installation directory
+export ANDROID_HOME="$XDG_DATA_HOME/android/sdk"
+# Automatically injects Android binaries into your PATH if they exist
+export PATH="$ANDROID_HOME/emulator:$ANDROID_HOME/platform-tools:$PATH"

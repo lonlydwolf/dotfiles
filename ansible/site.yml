@@ -8,6 +8,8 @@
     - role: macos_defaults
       when: ansible_facts['os_family'] == "Darwin"
       tags: [macos_defaults]
+    - role: build                 # self-built binaries (starship-jj) → ~/.local/bin
+      tags: [build]
     - role: prune                 # Gate 1: `never` keeps it out of default runs
       tags: [prune, never]
     - role: dotfiles              # MUST be last (applies chezmoi)

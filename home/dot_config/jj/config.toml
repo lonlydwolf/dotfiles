@@ -1,0 +1,9 @@
+#:schema https://jj-vcs.github.io/jj/latest/config-schema.json
+
+[user]
+name = "LonlyDWolf"
+email = "contact@ahmadmollaei.dev"
+
+[ui]
+default-command = "log"
+pager = "delta"

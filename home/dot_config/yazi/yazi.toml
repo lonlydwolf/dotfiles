@@ -1,0 +1,17 @@
+# Use VLC for Video files
+[opener]
+play = [
+    { run = 'open -a VLC "$@"', desc = "VLC", orphan = true }
+]
+open = [
+    { run = 'open "$@"', desc = "Open", orphan = true, for = "macos" }
+]
+[open]
+prepend_rules = [
+  { mime = "video/*", use = [ "play", "reveal" ] },
+]
+
+[plugin]
+prepend_previewers = [
+  { mime = "application/{*zip,tar,bzip2,7z*,rar,xz,zstd,java-archive}", run = "ouch" },
+]

@@ -1,0 +1,14 @@
+# ~/.config/sesh/sesh.toml
+#
+# Layout logic no longer lives here. `s` (in sesh.zsh) decides the mode
+# and passes it via `sesh connect --command "build-layout <mode>"`,
+# which bypasses default_session.startup_command entirely and only
+# fires on brand-new sessions (ignored on reattach).
+#
+# Nothing else needed here unless you want per-session overrides later,
+# e.g.:
+#
+# [[session]]
+# name = "downloads"
+# path = "~/Downloads"
+# startup_command = "ls"

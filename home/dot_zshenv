@@ -1,0 +1,18 @@
+# ~/.zshenv — the only zsh file allowed in $HOME.
+# Read first on every zsh invocation, before ZDOTDIR is known, so this is the
+# one correct place to relocate the rest of zsh's config under XDG.
+# Managed by chezmoi as dot_zshenv.
+
+# Keep PATH free of duplicates across nested shells (tmux, subshells, exec zsh).
+# Set before any PATH edits so every later prepend is auto-deduped.
+typeset -U path PATH
+
+# ---------- XDG base directories ----------
+export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
+export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
+export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
+export XDG_STATE_HOME="${XDG_STATE_HOME:-$HOME/.local/state}"
+
+# ---------- Relocate zsh itself ----------
+# Everything else (.zshrc, .zprofile, aliases, plugins…) lives here.
+[[ -d "$XDG_CONFIG_HOME/zsh" ]] && export ZDOTDIR="$XDG_CONFIG_HOME/zsh"

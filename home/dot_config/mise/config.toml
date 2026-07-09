@@ -1,0 +1,54 @@
+# ~/.config/mise/config.toml
+# GLOBAL toolchain — editor/language tooling available in every directory.
+# Cross-platform: these same lines work on macOS and Arch.
+
+[tools]
+# --- Language runtimes (backends below depend on these) ---
+node = "latest"   # needed by every npm: tool
+python = "latest" # needed by every pipx: tool
+go = "latest"     # needed by every go: tool
+rust = "latest"   # if you let mise own Rust instead of rustup
+
+# Lua
+"aqua:LuaLS/lua-language-server" = "latest"
+"cargo:stylua" = "latest"
+
+# Python
+"npm:basedpyright" = "latest"
+"pipx:ruff" = "latest"
+
+# JavaScript / TypeScript
+"npm:@vtsls/language-server" = "latest"
+"npm:@biomejs/biome" = "latest"
+
+# Go
+"go:golang.org/x/tools/gopls" = "latest"
+"go:golang.org/x/tools/cmd/goimports" = "latest"
+"go:honnef.co/go/tools/cmd/staticcheck" = "latest"
+
+# Rust
+"aqua:rust-lang/rust-analyzer" = "latest"
+# Bash / Zsh
+"npm:bash-language-server" = "latest"
+"go:mvdan.cc/sh/v3/cmd/shfmt" = "latest"
+
+# Ansible
+"npm:@ansible/ansible-language-server" = "latest"
+"pipx:ansible-lint" = "latest"
+
+# Markdown
+marksman = "latest"
+"npm:prettier" = "latest"
+
+# YAML
+"npm:yaml-language-server" = "latest"
+"pipx:yamllint" = "latest"
+
+# JSON
+"npm:vscode-langservers-extracted" = "latest"
+
+# TOML
+"cargo:taplo-cli" = "latest"
+
+# [env]
+# EDITOR = "nvim"

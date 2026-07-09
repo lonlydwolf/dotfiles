@@ -1,0 +1,114 @@
+#!/usr/bin/env zsh
+
+# Global Configurations
+typeset -g SESH_DOTFILES_PATH="$HOME/dotfiles"
+typeset -g SESH_BUILD_LAYOUT="$HOME/.config/sesh/scripts/build-layout"
+typeset -ga SESH_MODES=(agent-coding agent-learning dotfiles learning scratch)
+
+# Shared Styling for the Mode Picker Popup
+_sesh_fzf_style_tmux() {
+  fzf-tmux -p 40%,35% \
+    --border=rounded \
+    --border-label=' Sesh Mode Picker ' \
+    --layout=reverse \
+    --info=inline \
+    --ansi \
+    --color='fg:#cdd6f4,bg:#1e1e2e,hl:#89b4fa' \
+    --color='fg+:#cdd6f4,bg+:#313244,hl+:#89dceb' \
+    --color='info:#cba6f7,prompt:#89dceb,pointer:#f38ba8' \
+    --color='marker:#a6e3a1,spinner:#f5e0dc,header:#cba6f7' \
+    --pointer='▶' \
+    --marker='✓' \
+    --no-multi \
+    --cycle \
+    "$@"
+}
+
+# Native Zsh project detection
+_sesh_is_coding_project() {
+  local root="$1"
+  if [[ -f "$root/package.json" || -f "$root/pyproject.toml" || \
+        -f "$root/go.mod" || -f "$root/Cargo.toml" ]]; then
+    return 0
+  fi
+  if [[ -d "$root/.git" || -d "$root/.jj" ]]; then
+    return 0
+  fi
+  local -a subrepos=( "$root"/*/.git(/N) "$root"/*/.jj(/N) )
+  if (( ${#subrepos} > 0 )); then
+    return 0
+  fi
+  return 1
+}
+
+# Interactive layout mode picker utilizing a Tmux popup
+_sesh_pick_mode() {
+  local preselect="$1"
+  local -a ordered=("$preselect")
+  local m
+  for m in "${SESH_MODES[@]}"; do
+    [[ "$m" == "$preselect" ]] && continue
+    ordered+=("$m")
+  done
+
+  printf '%s\n' "${ordered[@]}" | _sesh_fzf_style_tmux \
+    --prompt='⚡ Mode › ' \
+    --header='ENTER (select layout mode for new session)'
+}
+
+# --- Main Core Execution ---
+
+# 1. Spawns the main session manager popup window
+raw_line=$(sesh list --icons | fzf-tmux -p 55%,60% \
+  --no-sort --ansi --border-label ' sesh ' --prompt '⚡ ' \
+  --header '  ^a all  ^t tmux  ^g configs  ^x zoxide  ^d kill  ^f find' \
+  --color='fg:#cdd6f4,bg:#1e1e2e,hl:#89b4fa' \
+  --color='fg+:#cdd6f4,bg+:#313244,hl+:#89dceb' \
+  --color='info:#cba6f7,prompt:#89dceb,pointer:#f38ba8' \
+  --color='marker:#a6e3a1,spinner:#f5e0dc,header:#cba6f7' \
+  --pointer='▶' --marker='✓' --cycle \
+  --bind 'tab:down,btab:up' \
+  --bind 'ctrl-a:change-prompt(⚡ )+reload(sesh list --icons)' \
+  --bind 'ctrl-t:change-prompt(🪟 )+reload(sesh list -t --icons)' \
+  --bind 'ctrl-g:change-prompt(⚙️  )+reload(sesh list -c --icons)' \
+  --bind 'ctrl-x:change-prompt(📁 )+reload(sesh list -z --icons)' \
+  --bind 'ctrl-f:change-prompt(🔎 )+reload(fd -H -d 2 -t d -E .Trash . ~)' \
+  --bind 'ctrl-d:execute(tmux kill-session -t {2..})+change-prompt(⚡ )+reload(sesh list --icons)')
+
+[[ -z "$raw_line" ]] && exit 0
+
+# 2. Extract targets and cleanse control strings
+local clean_line name target_dir
+clean_line=$(print -r -- "$raw_line" | sed -E 's/\x1b\[[0-9;]*m//g' | tr -d '\r')
+name=$(print -r -- "$clean_line" | awk '{print $NF}')
+
+target_dir=$(sesh list -i -H 2>/dev/null | sed -E 's/\x1b\[[0-9;]*m//g' | tr -d '\r' | awk -v n="$name" '{
+  for (i=1; i<=NF; i++) {
+    if ($i == n) {
+      print $NF
+      exit
+    }
+  }
+}')
+target_dir=${target_dir/#\~/$HOME}
+[[ -z "$target_dir" ]] && target_dir="$name"
+
+# 3. Direct attachment check
+if tmux has-session -t "$name" 2>/dev/null; then
+  sesh connect "$raw_line"
+  exit 0
+fi
+
+# 4. Contextual Evaluation and Optional Sub-prompting
+local mode
+if [[ "$target_dir" == "$SESH_DOTFILES_PATH" ]]; then
+  mode="dotfiles"
+else
+  local preselect="learning"
+  _sesh_is_coding_project "$target_dir" && preselect="agent-coding"
+  mode=$(_sesh_pick_mode "$preselect")
+  [[ -z "$mode" ]] && exit 0
+fi
+
+# 5. Hand off initialization execution to Sesh
+sesh connect "$raw_line" --command "$SESH_BUILD_LAYOUT $mode"

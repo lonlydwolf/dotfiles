@@ -1,0 +1,134 @@
+# ==================================================
+# History
+# ==================================================
+
+# Ensure the state dir exists, otherwise zsh silently never saves history
+[[ -d "$XDG_STATE_HOME/zsh" ]] || mkdir -p "$XDG_STATE_HOME/zsh"
+HISTFILE="$XDG_STATE_HOME/zsh/history"
+HISTSIZE=100000
+SAVEHIST=100000
+
+setopt APPEND_HISTORY
+setopt SHARE_HISTORY
+setopt HIST_IGNORE_DUPS
+setopt HIST_IGNORE_SPACE
+setopt HIST_EXPIRE_DUPS_FIRST
+setopt HIST_FIND_NO_DUPS
+
+# ==================================================
+# Shell behaviour
+# ==================================================
+
+setopt NOBEEP
+setopt NUMERIC_GLOB_SORT
+
+# ==================================================
+# Homebrew
+# ==================================================
+
+# initialize homebrew
+if [[ "$OSTYPE" == "darwin"* ]];then
+	eval "$(/opt/homebrew/bin/brew shellenv)"
+fi
+
+# ---------- Pager ----------
+if (( $+commands[bat] ));then
+	export MANPAGER="bat -l man -p"
+fi
+
+# ---------- GPG ----------
+export GPG_TTY=$(tty)
+
+
+# ==================================================
+# Mise
+# ==================================================
+
+# initialize mise
+if (( $+commands[mise] )); then
+	eval "$(mise activate zsh --shims)"
+fi
+
+# ==================================================
+# Smart cd
+# ==================================================
+
+# initialize zoxide
+if (( $+commands[zoxide] )); then
+	eval "$(zoxide init zsh)"
+fi
+
+# ==================================================
+# Completion
+# ==================================================
+
+# Load completion system
+autoload -Uz compinit
+
+# Initialize completion with cached metadata file
+# Ensure the cache dir exists, otherwise compinit silently fails to write the dump
+[[ -d "$XDG_CACHE_HOME/zsh" ]] || mkdir -p "$XDG_CACHE_HOME/zsh"
+compinit -d "$XDG_CACHE_HOME/zsh/zcompdump"
+
+# Diabale interactive completion menu selection so fzf-tab can safely take over
+zstyle ':completion:*' menu no
+
+# Make completion case-insensitive
+# Example: "doc" can complete to "Documents"
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'  # lowercase input matches upper and lower
+
+# --- Carapace Integration ---
+
+# 1. Enable bridging to fallback on standard shell completions when needed
+export CARAPACE_BRIDGES='zsh,fish,bash'
+
+# 2. Add formatting so Carapace-provided group descriptions render nicely in the menu
+zstyle ':completion:*' format $'\e[2;37mCompleting %d\e[m'
+
+# 3. Initialize Carapace (must happen AFTER compinit)
+if (( $+commands[carapace] )); then
+  source <(carapace _carapace)
+fi
+
+# ==================================================
+# Fuzzy finder
+# ==================================================
+
+source <(fzf --zsh)
+# # macOS / Homebrew (Apple Silicon)
+# if [[ -f /opt/homebrew/opt/fzf/shell/key-bindings.zsh ]]; then
+#   source /opt/homebrew/opt/fzf/shell/key-bindings.zsh
+#   source /opt/homebrew/opt/fzf/shell/completion.zsh
+# fi
+#
+# # Arch
+# if [[ -f /usr/share/fzf/key-bindings.zsh ]]; then
+#   source /usr/share/fzf/key-bindings.zsh
+#   source /usr/share/fzf/completion.zsh
+# fi
+
+# ==================================================
+# Modular Config Files
+# ==================================================
+
+# fzf configuration
+source "$ZDOTDIR/fzf.zsh"
+
+# Aliases
+source "$ZDOTDIR/aliases.zsh"
+
+# Custom keybindings
+source "$ZDOTDIR/bindings.zsh"
+
+# Plugins and plugin manager
+source "$ZDOTDIR/plugins.zsh"
+
+# Custom functions
+if [[ -d "$ZDOTDIR/functions" ]]; then
+	for function in "$ZDOTDIR/functions/"*.zsh(N); do
+		source "$function"
+	done
+fi
+
+# Prompt/theme
+source "$ZDOTDIR/prompt.zsh"

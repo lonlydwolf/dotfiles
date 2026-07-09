@@ -1,0 +1,117 @@
+#!/bin/bash
+# ~/.config/sesh/scripts/build-layout
+#
+# Invoked as: build-layout <mode>
+# via `sesh connect <session> --command "build-layout <mode>"` from the
+# `s` zsh function. Runs inside the freshly-created tmux session, in its
+# first window/pane, so `tmux display-message` below resolves the right
+# session/root automatically. Replaces all of workflow_default,
+# workflow_dotfiles, workflow_coding, and tmuxinator's dotfiles.yml.
+
+mode="$1"
+session=$(tmux display-message -p '#S')
+root=$(tmux display-message -p '#{session_path}')
+
+# Adjust these if chezmoi/ansible don't live at these paths inside the
+# dotfiles repo.
+chezmoi_dir="$root/chezmoi"
+ansible_dir="$root/ansible"
+
+# ---- pane templates -------------------------------------------------
+
+# agent-work: top (scratch/commands) / bottom-left (jj log watch) /
+# bottom-right (yazi). Used by agent-coding's Docs window.
+apply_agent_work() {
+  local win="$1" dir="$2"
+  tmux split-window -v -t "${session}:${win}" -c "$dir" -l 40%
+  tmux split-window -h -t "${session}:${win}.2" -c "$dir"
+  tmux send-keys -t "${session}:${win}.2" "jj log --color=always -T builtin_log_compact" C-m
+  tmux select-pane -t "${session}:${win}.1"
+}
+
+# agent-read: single pane, yazi. Used by agent-learning's Docs window.
+apply_agent_read() {
+  local win="$1" dir="$2"
+  tmux send-keys -t "${session}:${win}" "yazi" C-m
+}
+
+# dotfiles-work: top-left chezmoi / top-right ansible / full-width
+# bottom jj-watch rooted at the dotfiles repo root (not a subdir).
+apply_dotfiles_work() {
+  local win="$1"
+  tmux send-keys -t "${session}:${win}" "cd '$chezmoi_dir'" C-m
+
+  # Split top/bottom first: .1 = top (full width), .2 = bottom (full width, jj-watch)
+  tmux split-window -v -t "${session}:${win}" -c "$root" -l 30%
+  tmux send-keys -t "${session}:${win}.2" "jj log --color=always -T builtin_log_compact" C-m
+
+  # Now split the top pane left/right: .1 = top-left (chezmoi), .3 = top-right (ansible)
+  tmux split-window -h -t "${session}:${win}.1" -c "$ansible_dir"
+
+  tmux select-pane -t "${session}:${win}.1"
+}
+
+# ---- window skeletons -------------------------------------------------
+
+build_agent_coding() {
+  tmux rename-window -t "${session}:1" "Agent"
+
+  tmux new-window -t "${session}" -n "Docs" -c "$root"
+  apply_agent_work "Docs" "$root"
+
+  tmux new-window -t "${session}" -n "Code" -c "$root"
+  tmux send-keys -t "${session}:Code" "nvim" C-m
+
+  tmux select-window -t "${session}:Agent"
+}
+
+build_agent_learning() {
+  tmux rename-window -t "${session}:1" "Agent"
+
+  tmux new-window -t "${session}" -n "Docs" -c "$root"
+  apply_agent_read "Docs" "$root"
+
+  tmux new-window -t "${session}" -n "Code" -c "$root"
+  tmux send-keys -t "${session}:Code" "nvim" C-m
+
+  tmux select-window -t "${session}:Agent"
+}
+
+build_dotfiles() {
+  tmux rename-window -t "${session}:1" "Agent"
+
+  tmux new-window -t "${session}" -n "Ansible-Chezmoi" -c "$root"
+  apply_dotfiles_work "Ansible-Chezmoi"
+
+  tmux new-window -t "${session}" -n "Browse" -c "$root"
+  tmux send-keys -t "${session}:Browse" "yazi" C-m
+
+  tmux select-window -t "${session}:Agent"
+}
+
+build_learning() {
+  tmux rename-window -t "${session}:1" "Code"
+  tmux send-keys -t "${session}:Code" "nvim" C-m
+
+  tmux new-window -t "${session}" -n "Browse" -c "$root"
+
+  tmux select-window -t "${session}:Code"
+}
+
+build_scratch() {
+  tmux rename-window -t "${session}:1" "Scratch"
+}
+
+# ---- dispatch -----------------------------------------------------
+
+case "$mode" in
+agent-coding) build_agent_coding ;;
+agent-learning) build_agent_learning ;;
+dotfiles) build_dotfiles ;;
+learning) build_learning ;;
+scratch) build_scratch ;;
+*)
+  echo "build-layout: unknown mode '$mode'" >&2
+  exit 1
+  ;;
+esac

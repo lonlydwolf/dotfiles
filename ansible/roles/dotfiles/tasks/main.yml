@@ -1,5 +1,17 @@
 ---
-# TODO Phase 3-4: chezmoi apply in place (configured sourceDir, never `chezmoi init <user>`)
-- name: dotfiles placeholder
+# Applies chezmoi in place; NEVER `chezmoi init <user>` — that re-clones (single-clone rule).
+- name: Audit — dotfiles drift (chezmoi diff)
+  ansible.builtin.command: chezmoi diff
+  register: chezmoi_diff
+  changed_when: false
+  failed_when: false
+  check_mode: false
+
+- name: Show dotfiles drift
   ansible.builtin.debug:
-    msg: "dotfiles role — TODO Build Phases 3-4"
+    msg: "{{ chezmoi_diff.stdout_lines }}"
+
+- name: Converge — apply dotfiles
+  ansible.builtin.command: chezmoi apply
+  when: chezmoi_diff.stdout | length > 0
+  changed_when: true

@@ -1,0 +1,7 @@
+#!/bin/sh
+# Binary must stay named `quicklook` — the yazi keymap calls it by that name.
+# ql.swift hash: {{ include "dot_config/yazi/ql.swift" | sha256sum }}
+set -eu
+
+mkdir -p "$HOME/.local/bin"
+swiftc "$HOME/.config/yazi/ql.swift" -o "$HOME/.local/bin/quicklook"

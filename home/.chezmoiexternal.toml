@@ -1,0 +1,5 @@
+# Own public repo; refresh by-hand with `chezmoi apply --refresh-externals`.
+[".config/nvim"]
+    type = "git-repo"
+    url = "https://github.com/lonlydwolf/nvim-config.git"
+    refreshPeriod = "168h"
