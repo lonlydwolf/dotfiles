@@ -1,5 +1,9 @@
 ---
-# Applies chezmoi in place; NEVER `chezmoi init <user>` — that re-clones (single-clone rule).
+# --source points chezmoi at the existing clone; NEVER `chezmoi init <user>` — that re-clones.
+- name: Generate chezmoi config (sets sourceDir + age; idempotent)
+  ansible.builtin.command: "chezmoi init --source {{ ansible_env.HOME }}/dotfiles"
+  changed_when: false
+
 - name: Audit — dotfiles drift (chezmoi diff)
   ansible.builtin.command: chezmoi diff
   register: chezmoi_diff

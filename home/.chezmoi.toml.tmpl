@@ -1,0 +1,8 @@
+# recipient is public; the private identity is restored by hand (rebuild step 1), never committed.
+sourceDir = "{{ .chezmoi.homeDir }}/dotfiles"
+encryption = "age"
+
+[age]
+    identity = "{{ .chezmoi.homeDir }}/.config/chezmoi/key.txt"
+    recipient = "age17sttyf93w8cqprfp4g2yslthq4cf935xdqht75mhkkzz0c6hkfhsf5qacs"
+    armor = true
