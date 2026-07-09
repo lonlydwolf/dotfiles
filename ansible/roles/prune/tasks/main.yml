@@ -1,6 +1,19 @@
 ---
-# TODO Phase 2: double-gated cleanup. Gate 2 = `when: prune_force | bool` on the
-# destructive task (brew bundle cleanup / pacman drift); list-only without it.
-- name: prune placeholder
-  ansible.builtin.debug:
-    msg: "prune role — TODO Build Phase 2 (prune_force={{ prune_force }})"
+# Double-gated: Gate 1 = `never` tag (site.yml) -> only via --tags prune. Gate 2 = prune_force.
+- name: Prune drift (brew bundle cleanup) — mac-only
+  when: ansible_facts['os_family'] == "Darwin"
+  block:
+    - name: Audit — what is NOT in the Brewfile (read-only)
+      ansible.builtin.command: "brew bundle cleanup --file={{ brewfile }}"
+      register: prune_audit
+      changed_when: false
+      failed_when: false
+      check_mode: false
+    - name: Show what a prune WOULD remove
+      ansible.builtin.debug:
+        msg: "{{ prune_audit.stdout_lines | default(['(nothing to prune)'], true) }}"
+    - name: PRUNE FOR REAL — uninstall drift (Gate 2)
+      ansible.builtin.command: "brew bundle cleanup --file={{ brewfile }} --force"
+      register: prune_run
+      when: prune_force | bool
+      changed_when: "'Uninstalling' in prune_run.stdout"

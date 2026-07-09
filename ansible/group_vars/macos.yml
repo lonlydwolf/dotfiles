@@ -1,2 +1,3 @@
 ---
+brewfile: "{{ lookup('env', 'HOME') }}/.config/Brew/Brewfile"
 macos_defaults: []  # osx_defaults entries — Build Phase 5

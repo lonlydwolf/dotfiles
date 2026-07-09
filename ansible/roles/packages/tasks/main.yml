@@ -1,5 +1,42 @@
 ---
-# TODO Phase 2: brew bundle (~/.config/Brew/Brewfile) + mise install (audit/converge split)
-- name: packages placeholder
+# audit = read-only (check_mode:false so it reports under --check); converge is gated on the
+# audit's signal (brew rc / mise --json) and skips under --check.
+
+- name: macOS packages (brew bundle)
+  when: ansible_facts['os_family'] == "Darwin"
+  block:
+    - name: Audit — Brewfile satisfied? (rc != 0 = drift)
+      ansible.builtin.command: "brew bundle check --file={{ brewfile }} --no-upgrade"
+      register: brew_audit
+      changed_when: false
+      failed_when: false
+      check_mode: false
+    - name: Show brew audit
+      ansible.builtin.debug:
+        msg: "{{ brew_audit.stdout_lines }}"
+    - name: Converge — install to match the Brewfile
+      ansible.builtin.command: "brew bundle install --file={{ brewfile }}"
+      when: brew_audit.rc != 0
+      changed_when: true
+
+- name: Arch packages (pacman) — stub
+  when: ansible_facts['os_family'] == "Archlinux"
+  block:
+    - name: pacman placeholder
+      ansible.builtin.debug:
+        msg: "pacman role — TODO when porting to Arch"
+
+# mise (cross-OS): global toolchain
+- name: Audit — missing mise tools ({} = none)
+  ansible.builtin.command: "mise ls --missing --json"
+  register: mise_audit
+  changed_when: false
+  failed_when: false
+  check_mode: false
+- name: Show missing mise tools
   ansible.builtin.debug:
-    msg: "packages role — TODO Build Phase 2"
+    msg: "{{ mise_audit.stdout | default('{}') | from_json }}"
+- name: Converge — install declared mise tools
+  ansible.builtin.command: "mise install"
+  when: (mise_audit.stdout | default('{}') | from_json | length) > 0
+  changed_when: true

@@ -6,7 +6,7 @@
     - role: packages
       tags: [packages]
     - role: macos_defaults
-      when: ansible_system == "Darwin"
+      when: ansible_facts['os_family'] == "Darwin"
       tags: [macos_defaults]
     - role: prune                 # Gate 1: `never` keeps it out of default runs
       tags: [prune, never]
