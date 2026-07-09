@@ -1,3 +1,49 @@
 ---
 brewfile: "{{ lookup('env', 'HOME') }}/.config/Brew/Brewfile"
-macos_defaults: []  # osx_defaults entries — Build Phase 5
+
+macos_defaults:
+  # NSGlobalDomain
+  - { domain: NSGlobalDomain, key: AppleShowAllExtensions, type: bool, value: true }
+  - { domain: NSGlobalDomain, key: AppleMeasurementUnits, type: string, value: Centimeters }
+  - { domain: NSGlobalDomain, key: AppleMetricUnits, type: bool, value: true }
+  - { domain: NSGlobalDomain, key: AppleTemperatureUnit, type: string, value: Celsius }
+  - { domain: NSGlobalDomain, key: com.apple.mouse.tapBehavior, type: int, value: 0 }
+  - { domain: NSGlobalDomain, key: AppleIconAppearanceTheme, type: string, value: RegularDark }
+  # both live variants of the Open-panel list-view key are set to match this machine
+  - { domain: NSGlobalDomain, key: NSNavPanelFileListModeForOpenMode2, type: int, value: 2 }
+  - { domain: NSGlobalDomain, key: NavPanelFileListModeForOpenMode, type: int, value: 2 }
+  # keyboard: fast repeat + hold-key-repeats — need a full logout to take effect
+  - { domain: NSGlobalDomain, key: KeyRepeat, type: int, value: 2 }
+  - { domain: NSGlobalDomain, key: InitialKeyRepeat, type: int, value: 15 }
+  - { domain: NSGlobalDomain, key: ApplePressAndHoldEnabled, type: bool, value: false }
+
+  # com.apple.finder
+  - { domain: com.apple.finder, key: FXPreferredViewStyle, type: string, value: Nlsv }
+  - { domain: com.apple.finder, key: ShowPathbar, type: bool, value: true }
+  - { domain: com.apple.finder, key: ShowStatusBar, type: bool, value: true }
+  - { domain: com.apple.finder, key: ShowSidebar, type: bool, value: true }
+  - { domain: com.apple.finder, key: ShowExternalHardDrivesOnDesktop, type: bool, value: false }
+  - { domain: com.apple.finder, key: ShowRemovableMediaOnDesktop, type: bool, value: false }
+  - { domain: com.apple.finder, key: FXRemoveOldTrashItems, type: bool, value: true }
+  - { domain: com.apple.finder, key: FXDefaultSearchScope, type: string, value: SCcf }
+  - { domain: com.apple.finder, key: NewWindowTarget, type: string, value: PfHm }
+
+  # com.apple.dock
+  - { domain: com.apple.dock, key: orientation, type: string, value: left }
+  - { domain: com.apple.dock, key: tilesize, type: float, value: 16 }
+  - { domain: com.apple.dock, key: largesize, type: float, value: 16 }
+  - { domain: com.apple.dock, key: magnification, type: bool, value: false }
+  - { domain: com.apple.dock, key: autohide, type: bool, value: true }
+  # 10000 is intentional — the Dock is effectively never meant to reappear on hover
+  - { domain: com.apple.dock, key: autohide-delay, type: float, value: 10000 }
+  - { domain: com.apple.dock, key: launchanim, type: bool, value: false }
+  - { domain: com.apple.dock, key: show-recents, type: bool, value: false }
+  - { domain: com.apple.dock, key: minimize-to-application, type: bool, value: false }
+  - { domain: com.apple.dock, key: showAppExposeGestureEnabled, type: bool, value: false }
+  - { domain: com.apple.dock, key: showMissionControlGestureEnabled, type: bool, value: true }
+  - { domain: com.apple.dock, key: expose-group-apps, type: bool, value: false }
+  - { domain: com.apple.dock, key: wvous-bl-corner, type: int, value: 11 }   # bottom-left → Launchpad
+  - { domain: com.apple.dock, key: wvous-bl-modifier, type: int, value: 0 }
+
+  # com.apple.menuextra.clock
+  - { domain: com.apple.menuextra.clock, key: ShowSeconds, type: bool, value: true }

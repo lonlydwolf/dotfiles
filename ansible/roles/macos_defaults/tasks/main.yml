@@ -1,5 +1,12 @@
 ---
-# TODO Phase 5: osx_defaults loop over macos_defaults; notify killall Dock/Finder/SystemUIServer
-- name: macos_defaults placeholder
-  ansible.builtin.debug:
-    msg: "macos_defaults role — TODO Build Phase 5"
+- name: Apply macOS defaults
+  community.general.osx_defaults:
+    domain: "{{ item.domain }}"
+    key: "{{ item.key }}"
+    type: "{{ item.type }}"
+    value: "{{ item.value }}"
+    state: present
+  loop: "{{ macos_defaults }}"
+  loop_control:
+    label: "{{ item.domain }} {{ item.key }}"
+  notify: refresh macos ui
