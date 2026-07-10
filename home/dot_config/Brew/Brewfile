@@ -98,6 +98,7 @@ cask "claude-code"   # Terminal-based AI coding assistant
 cask "codex"         # OpenAI's coding agent that runs in your terminal
 cask "google-gemini" # Native desktop AI assistant from Google
 cask "ollama-app"    # Get up and running with large language models locally
+cask "codex-app"     # OpenAI's Codex desktop app for managing coding agents
 
 # --- Purpose: Browser ---
 cask "brave-browser" # Web browser focusing on privacy
