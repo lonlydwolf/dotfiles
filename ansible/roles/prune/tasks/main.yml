@@ -12,8 +12,24 @@
     - name: Show what a prune WOULD remove
       ansible.builtin.debug:
         msg: "{{ prune_audit.stdout_lines | default(['(nothing to prune)'], true) }}"
+    - name: Audit — outdated download caches (read-only)
+      ansible.builtin.command: brew cleanup --prune=all --dry-run
+      register: cleanup_audit
+      changed_when: false
+      failed_when: false
+      check_mode: false
+    - name: Show what a cache purge WOULD remove
+      ansible.builtin.debug:
+        msg: "{{ cleanup_audit.stdout_lines | default(['(no caches to purge)'], true) }}"
     - name: PRUNE FOR REAL — uninstall drift (Gate 2)
       ansible.builtin.command: "brew bundle cleanup --file={{ brewfile }} --force"
       register: prune_run
       when: prune_force | bool
-      changed_when: "'Uninstalling' in prune_run.stdout"
+      changed_when: "'Uninstalled' in prune_run.stdout"
+    # bundle's embedded `brew cleanup` dies silently if it prints a warning
+    # (runs with stderr closed) — run it directly
+    - name: Purge outdated download caches (Gate 2)
+      ansible.builtin.command: brew cleanup --prune=all
+      register: prune_cleanup
+      when: prune_force | bool
+      changed_when: "'Removing' in prune_cleanup.stdout"
