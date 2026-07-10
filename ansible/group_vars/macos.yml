@@ -1,5 +1,7 @@
 ---
-brewfile: "{{ lookup('env', 'HOME') }}/.config/Brew/Brewfile"
+# chezmoi source path, not ~/.config: packages runs before the dotfiles role,
+# so the applied copy does not exist yet on a cold machine
+brewfile: "{{ playbook_dir }}/../home/dot_config/Brew/Brewfile"
 
 macos_defaults:
   # NSGlobalDomain

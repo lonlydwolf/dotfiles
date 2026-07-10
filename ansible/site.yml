@@ -2,6 +2,10 @@
 - name: Converge this machine to its declared state
   hosts: all
   gather_facts: true
+  # mise reads the chezmoi source config: ~/.config/mise/config.toml does not
+  # exist before the dotfiles role on a cold machine
+  environment:
+    MISE_GLOBAL_CONFIG_FILE: "{{ playbook_dir }}/../home/dot_config/mise/config.toml"
   roles:
     - role: packages
       tags: [packages]

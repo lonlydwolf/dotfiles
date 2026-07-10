@@ -2,11 +2,11 @@
 # cargo can't express a local-path crate as a mise tool, so starship-jj is built here.
 - name: Audit — is starship-jj already built?
   ansible.builtin.stat:
-    path: "{{ ansible_env.HOME }}/.local/bin/starship-jj"
+    path: "{{ ansible_facts['env']['HOME'] }}/.local/bin/starship-jj"
   register: starship_jj_bin
 
 - name: Converge — cargo install starship-jj to ~/.local
   ansible.builtin.command:
-    cmd: "mise exec -- cargo install --path {{ starship_jj_src }} --root {{ ansible_env.HOME }}/.local"
+    cmd: "mise exec -- cargo install --path {{ starship_jj_src }} --root {{ ansible_facts['env']['HOME'] }}/.local"
   when: not starship_jj_bin.stat.exists
   changed_when: true
