@@ -1,5 +1,9 @@
-# Own public repo; refresh by-hand with `chezmoi apply --refresh-externals`.
+# jj-colocated (detached HEAD): clone-if-missing; update via jj, not chezmoi.
+# pull.args keeps the one post-clone pull working (refreshPeriod=0 only gates
+# after a first recorded success).
 [".config/nvim"]
     type = "git-repo"
     url = "https://github.com/lonlydwolf/nvim-config.git"
-    refreshPeriod = "168h"
+    refreshPeriod = "0"
+    [".config/nvim".pull]
+        args = ["--ff-only", "origin", "main"]
