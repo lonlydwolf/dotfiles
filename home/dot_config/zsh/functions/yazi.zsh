@@ -4,7 +4,7 @@
 
 # Yazi Shell Wrapper
 function y() {
-  if ((! commands[yazi] )); then
+  if ((! $+commands[yazi] )); then
     error_log "yazi not found - install: brew install yazi"
     return 1
   fi
