@@ -3,36 +3,36 @@
 # ============================================================
 
 # --- Purpose: Version Control ---
-brew "git"                   # Distributed revision control system
-brew "git-delta"             # Syntax-highlighting pager for git and diff output
-brew "jj"                    # Git-compatible distributed version control system
+brew "git"                   # @core  Distributed revision control system
+brew "git-delta"             # @core  Syntax-highlighting pager for git and diff output
+brew "jj"                    # @core  Git-compatible distributed version control system
 brew "gh"                    # GitHub command-line tool
 brew "git-filter-repo"       # Quickly rewrite git repository history
 brew "gitleaks"              # Audit git repos for secrets
 
 # --- Purpose: Dotfiles Management ---
-brew "chezmoi"    # Manage your dotfiles across multiple diverse machines, securely
+brew "chezmoi"    # @core  Manage your dotfiles across multiple diverse machines, securely
 
 # --- Purpose: Shell ---
-brew "bash"       # Bourne-Again SHell, a UNIX command interpreter
-brew "carapace"   # Multi-shell multi-command argument completer
-brew "starship"   # Cross-shell prompt for astronauts
-brew "zoxide"     # Shell extension to navigate your filesystem faster
+brew "bash"       # @core  Bourne-Again SHell, a UNIX command interpreter
+brew "carapace"   # @core  Multi-shell multi-command argument completer
+brew "starship"   # @core  Cross-shell prompt for astronauts
+brew "zoxide"     # @core  Shell extension to navigate your filesystem faster
 
 # --- Purpose: Terminal / Session Management ---
-brew "tmux"        # Terminal multiplexer
-brew "sesh"        # Smart session manager for the terminal
+brew "tmux"        # @core  Terminal multiplexer
+brew "sesh"        # @core  Smart session manager for the terminal
 brew "herdr"       # Agent multiplexer that lives in your terminal
 
 # --- Purpose: CLI Utility ---
 brew "tree"          # Display directories as trees (with optional color/HTML output)
-brew "bat"           # Clone of cat(1) with syntax highlighting and Git integration
+brew "bat"           # @core  Clone of cat(1) with syntax highlighting and Git integration
 brew "bat-extras"    # Bash scripts that integrate bat with various command-line tools
-brew "eza"           # Modern, maintained replacement for ls
-brew "fd"            # Simple, fast and user-friendly alternative to find
-brew "fzf"           # Command-line fuzzy finder written in Go
-brew "ripgrep"       # Search tool like grep and The Silver Searcher
-brew "jq"            # Lightweight and flexible command-line JSON processor
+brew "eza"           # @core  Modern, maintained replacement for ls
+brew "fd"            # @core  Simple, fast and user-friendly alternative to find
+brew "fzf"           # @core  Command-line fuzzy finder written in Go
+brew "ripgrep"       # @core  Search tool like grep and The Silver Searcher
+brew "jq"            # @core  Lightweight and flexible command-line JSON processor
 brew "grc"           # Colorize logfiles and command output
 brew "fastfetch"     # Like neofetch, but much faster because written mostly in C
 brew "tealdeer"      # Very fast implementation of tldr in Rust
@@ -57,12 +57,12 @@ brew "llvm"      # Next-gen compiler infrastructure
 brew "luarocks"  # Package manager for the Lua programming language
 brew "uv"        # Extremely fast Python package installer and resolver, written in Rust
 brew "ipython"   # Interactive computing in Python
-brew "just"      # Handy way to save and run project-specific commands
+brew "just"      # @core  Handy way to save and run project-specific commands
 
 # --- Purpose: Dev Tool ---
-brew "ansible"           # Automate deployment, configuration, and upgrading
+brew "ansible"           # @core  Automate deployment, configuration, and upgrading
 brew "gum"               # Tool for glamorous shell scripts
-brew "mise"              # Polyglot runtime manager (asdf rust clone)
+brew "mise"              # @core  Polyglot runtime manager (asdf rust clone)
 brew "tree-sitter-cli"   # Parser generator tool
 brew "http-server"       # Simple zero-configuration command-line HTTP server
 brew "poppler"           # PDF rendering library (based on the xpdf-3.0 code base)
@@ -73,7 +73,7 @@ brew "ollama"    # Create, run, and share large language models (LLMs)
 brew "opencode"  # AI coding agent, built for the terminal
 
 # --- Purpose: Editor ---
-brew "neovim"  # Ambitious Vim-fork focused on extensibility and agility
+brew "neovim"  # @core  Ambitious Vim-fork focused on extensibility and agility
 
 # --- Purpose: System Utility ---
 brew "mole"      # Deep clean and optimize your Mac
@@ -113,7 +113,7 @@ cask "zoom"        # Video communication and virtual meeting platform
 cask "bluebubbles" # Server for forwarding iMessages
 
 # --- Purpose: Terminal ---
-cask "ghostty" # Terminal emulator that uses platform-native UI and GPU acceleration
+cask "ghostty" # @core  Terminal emulator that uses platform-native UI and GPU acceleration
 
 # --- Purpose: Dev Tool ---
 cask "docker-desktop"      # App to build and share containerised applications and microservices
@@ -142,7 +142,7 @@ cask "the-unarchiver" # Unpacks archive files
 cask "vlc" # Multimedia player
 
 # --- Purpose: Font ---
-cask "font-jetbrains-mono-nerd-font" # JetBrains Mono Nerd Font
+cask "font-jetbrains-mono-nerd-font" # @core  JetBrains Mono Nerd Font
 
 
 # ============================================================
