@@ -1,8 +1,5 @@
 ---
-# audit = read-only (check_mode:false so it reports under --check); converge is gated on the
-# audit's signal (brew rc / mise --json) and skips under --check.
-
-- name: macOS packages (brew bundle)
+- name: macOS packages (brew bundle) — audit only; converge with `just install`
   when: ansible_facts['os_family'] == "Darwin"
   block:
     - name: Audit — Brewfile satisfied? (rc != 0 = drift)
@@ -13,11 +10,11 @@
       check_mode: false
     - name: Show brew audit
       ansible.builtin.debug:
-        msg: "{{ brew_audit.stdout_lines }}"
-    - name: Converge — install to match the Brewfile
-      ansible.builtin.command: "brew bundle install --file={{ brewfile }}"
+        msg: "{{ brew_audit.stdout_lines | default([], true) }}"
+    - name: Report — how to converge brew drift
+      ansible.builtin.debug:
+        msg: "Brewfile drift detected — run `just install` to converge (interactive; casks may prompt for your password)."
       when: brew_audit.rc != 0
-      changed_when: true
 
 - name: Arch packages (pacman) — stub
   when: ansible_facts['os_family'] == "Archlinux"
