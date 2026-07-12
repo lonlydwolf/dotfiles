@@ -13,7 +13,7 @@
 
 - name: Show dotfiles drift
   ansible.builtin.debug:
-    msg: "{{ chezmoi_diff.stdout_lines }}"
+    msg: "{{ chezmoi_diff.stdout_lines | default(['(dotfiles in sync)'], true) }}"
 
 - name: Converge — apply dotfiles
   ansible.builtin.command: chezmoi apply

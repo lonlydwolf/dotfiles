@@ -3,7 +3,7 @@
   when: ansible_facts['os_family'] == "Darwin"
   block:
     - name: Audit — Brewfile satisfied? (rc != 0 = drift)
-      ansible.builtin.command: "brew bundle check --file={{ brewfile }} --no-upgrade"
+      ansible.builtin.command: "brew bundle check --file={{ brewfile }} --verbose --no-upgrade"
       register: brew_audit
       changed_when: false
       failed_when: false
@@ -32,7 +32,7 @@
   check_mode: false
 - name: Show missing mise tools
   ansible.builtin.debug:
-    msg: "{{ mise_audit.stdout | default('{}') | from_json }}"
+    msg: "{{ (mise_audit.stdout | default('{}') | from_json) or '(mise tools in sync)' }}"
 - name: Converge — install declared mise tools
   ansible.builtin.command: "mise install"
   when: (mise_audit.stdout | default('{}') | from_json | length) > 0
