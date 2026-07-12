@@ -33,8 +33,9 @@ export PATH="$GOPATH/bin:$PATH"
 
 # Node / NPM / Bun
 export NPM_CONFIG_USERCONFIG="$XDG_CONFIG_HOME/npm/npmrc"
+export npm_config_cache="$XDG_CACHE_HOME/npm"   # relocates the ~/.npm cache
 export NODE_REPL_HISTORY="$XDG_DATA_HOME/node_history"
-export BUN_INSTALL_DIR="$XDG_DATA_HOME/bun"
+export BUN_INSTALL="$XDG_DATA_HOME/bun"
 
 # Python / Pip
 export PIP_CACHE_DIR="$XDG_CACHE_HOME/pip"
@@ -48,8 +49,6 @@ export AWS_CONFIG_FILE="$XDG_CONFIG_HOME/aws/config"
 # C / C++ Toolchains
 # Prevents compiler cache from dumping into ~/.ccache
 export CCACHE_DIR="$XDG_CACHE_HOME/ccache"
-# Forces CMake to store local configurations cleanly
-export CMAKE_USER_CONFIG_DIR="$XDG_CONFIG_HOME/cmake"
 
 # Android SDK & Emulator
 # Moves the ~/.android folder (AVDs, emulator keys, debug keystores)
