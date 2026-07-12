@@ -3,7 +3,7 @@
 # after a first recorded success).
 [".config/nvim"]
     type = "git-repo"
-    url = "https://github.com/lonlydwolf/nvim-config.git"
+    url = "git@github.com:lonlydwolf/nvim-config.git"
     refreshPeriod = "0"
     [".config/nvim".pull]
         args = ["--ff-only", "origin", "main"]

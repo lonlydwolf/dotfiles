@@ -2,7 +2,7 @@
 # Cold start: curl -fsSL https://raw.githubusercontent.com/lonlydwolf/dotfiles/main/bootstrap.sh | sh
 set -eu
 
-REPO_URL="https://github.com/lonlydwolf/dotfiles.git"
+REPO_URL="git@github.com:lonlydwolf/dotfiles.git"
 REPO_DIR="$HOME/dotfiles"
 IDENTITY="$HOME/.config/chezmoi/key.txt"
 
