@@ -2,6 +2,7 @@
 set shell := ["bash", "-euo", "pipefail", "-c"]
 
 playbook := "ansible/site.yml"
+brewfile := "home/dot_config/Brew/Brewfile"
 
 default:
     @just --list
@@ -22,9 +23,22 @@ check:
 sync:
     ansible-playbook {{playbook}}
 
-# converge just the packages role
+# report package drift (advisory; converge with `just install`)
 packages:
     ansible-playbook {{playbook}} --tags packages
+
+# install the full Brewfile (interactive: casks may prompt for sudo)
+install:
+    brew bundle install --file={{brewfile}}
+
+# install only the # @core subset — a usable machine first (used by bootstrap)
+install-core:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    core="$(mktemp)"
+    trap 'rm -f "$core"' EXIT
+    grep '# @core' {{brewfile}} > "$core"
+    brew bundle install --file="$core"
 
 # cleanup report (feeds prune)
 audit:
