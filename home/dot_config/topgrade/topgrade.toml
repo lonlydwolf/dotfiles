@@ -23,7 +23,7 @@
 
 # Disable specific steps - same options as the command line flag
 # disable = ["system", "emacs"]
-disable = ["git_repos", "containers", "pnpm", "claude_code", "vcpkg", "chezmoi"]
+disable = ["git_repos", "containers", "pnpm", "claude_code", "vcpkg", "chezmoi", "skills"]
 
 # Ignore failures for these steps
 # ignore_failures = ["powershell"]
@@ -110,6 +110,7 @@ disable = ["git_repos", "containers", "pnpm", "claude_code", "vcpkg", "chezmoi"]
 
 # Custom commands
 [commands]
+"Zsh Plugins" = "-i zplugin-update"
 # "Python Environment" = "~/dev/.env/bin/pip install -i https://pypi.python.org/simple -U --upgrade-strategy eager jupyter"
 # "Custom command using interactive shell (unix)" = "-i vim_upgrade"
 
