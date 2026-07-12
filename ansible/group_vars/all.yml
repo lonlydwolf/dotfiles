@@ -1,6 +1,3 @@
 ---
-# prune Gate 2 (default off); `just prune --force` sets it true
-prune_force: false
-
 # starship-jj crate source (chezmoi-tracked); the build role cargo-installs it to ~/.local
 starship_jj_src: "{{ lookup('env', 'HOME') }}/dotfiles/home/dot_config/starship/starship-jj"

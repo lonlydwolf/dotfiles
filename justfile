@@ -45,6 +45,13 @@ audit:
     ansible-playbook {{playbook}} --check --diff --tags packages
     just prune
 
-# opt-in cleanup — list-only unless you pass --force / -f
+# cleanup — report only; `just prune -f` uninstalls + purges caches (interactive)
 prune force="":
-    ansible-playbook {{playbook}} --tags prune {{ if force != "" { "-e prune_force=true" } else { "" } }}
+    #!/usr/bin/env bash
+    set -euo pipefail
+    if [ -n "{{force}}" ]; then
+        brew bundle cleanup --file={{brewfile}} --force
+        brew cleanup --prune=all
+    else
+        ansible-playbook {{playbook}} --tags prune
+    fi

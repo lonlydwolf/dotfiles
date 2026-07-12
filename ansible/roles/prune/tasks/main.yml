@@ -1,6 +1,6 @@
 ---
-# Double-gated: Gate 1 = `never` tag (site.yml) -> only via --tags prune. Gate 2 = prune_force.
-- name: Prune drift (brew bundle cleanup) — mac-only
+# Read-only audit (opt-in via the `never` tag). Real removal is interactive: `just prune -f`.
+- name: Prune audit (brew) — mac-only; report only
   when: ansible_facts['os_family'] == "Darwin"
   block:
     - name: Audit — what is NOT in the Brewfile (read-only)
@@ -21,15 +21,7 @@
     - name: Show what a cache purge WOULD remove
       ansible.builtin.debug:
         msg: "{{ cleanup_audit.stdout_lines | default(['(no caches to purge)'], true) }}"
-    - name: PRUNE FOR REAL — uninstall drift (Gate 2)
-      ansible.builtin.command: "brew bundle cleanup --file={{ brewfile }} --force"
-      register: prune_run
-      when: prune_force | bool
-      changed_when: "'Uninstalled' in prune_run.stdout"
-    # bundle's embedded `brew cleanup` dies silently if it prints a warning
-    # (runs with stderr closed) — run it directly
-    - name: Purge outdated download caches (Gate 2)
-      ansible.builtin.command: brew cleanup --prune=all
-      register: prune_cleanup
-      when: prune_force | bool
-      changed_when: "'Removing' in prune_cleanup.stdout"
+    - name: Report — how to remove
+      ansible.builtin.debug:
+        msg: "Run `just prune -f` to uninstall the above and purge caches (interactive)."
+      when: (prune_audit.stdout | length > 0) or (cleanup_audit.stdout | length > 0)
