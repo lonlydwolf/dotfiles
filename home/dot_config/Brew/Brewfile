@@ -43,6 +43,7 @@ brew "yazi"          # Blazing fast terminal file manager written in Rust, based
 brew "mas"           # Mac App Store command-line interface
 brew "speedtest-cli" # Command-line interface for https://speedtest.net bandwidth tests
 brew "cmatrix"       # Console Matrix
+brew "ouch"          # Painless compression and decompression for your terminal
 
 # --- Purpose: LSP / Linters / Formatters ---
 brew "docker-language-server"  # Language server for Dockerfiles, Compose files, and Bake files
