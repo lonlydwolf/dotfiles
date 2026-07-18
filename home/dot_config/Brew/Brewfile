@@ -127,6 +127,7 @@ cask "raindropio" # All-in-one bookmark manager
 cask "raycast"    # Control your tools with a few keystrokes
 cask "handy"      # Speech to text application
 cask "blip"       # Send any size file between devices
+cask "amethyst"   # Automatic tiling window manager similar to xmonad
 
 # --- Purpose: Security ---
 cask "proton-pass" # Desktop client for Proton Pass
