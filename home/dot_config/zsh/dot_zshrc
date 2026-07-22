@@ -46,7 +46,7 @@ export GPG_TTY=$(tty)
 
 # initialize mise
 if (( $+commands[mise] )); then
-	eval "$(mise activate zsh --shims)"
+	eval "$(mise activate zsh)"
 fi
 
 # ==================================================
