@@ -95,7 +95,7 @@ brew "imagemagick" # Tools and libraries to manipulate images in select formats
 
 # --- Purpose: AI Tool ---
 cask "claude"        # Anthropic's official Claude AI desktop app
-cask "claude-code"   # Terminal-based AI coding assistant
+cask "claude-code@latest"   # Terminal-based AI coding assistant
 cask "codex"         # OpenAI's coding agent that runs in your terminal
 cask "google-gemini" # Native desktop AI assistant from Google
 cask "ollama-app"    # Get up and running with large language models locally
