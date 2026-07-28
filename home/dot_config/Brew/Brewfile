@@ -195,11 +195,6 @@ vscode "vscode-icons-team.vscode-icons"   # Alternative file icon theme
 # TEMP
 # ============================================================
 
-# --- Being replaced / superseded ---
-brew "stow"                       # Being replaced by chezmoi
-brew "zsh-autosuggestions"        # Will be installed as a zsh plugin instead
-brew "zsh-fast-syntax-highlighting" # Will be installed as a zsh plugin instead
-
 # ----- Minow-Mango Project (one time) -----
 brew "php"       # Being used for one-time project
 brew "composer"  # Being used for one-time project
