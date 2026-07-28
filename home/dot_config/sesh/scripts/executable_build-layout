@@ -25,7 +25,7 @@ apply_agent_work() {
   local win="$1" dir="$2"
   tmux split-window -v -t "${session}:${win}" -c "$dir" -l 40%
   tmux split-window -h -t "${session}:${win}.2" -c "$dir"
-  tmux send-keys -t "${session}:${win}.2" "jj log --color=always -T builtin_log_compact" C-m
+  tmux send-keys -t "${session}:${win}.2" "watch --color jj log --color=always" C-m
   tmux select-pane -t "${session}:${win}.1"
 }
 
