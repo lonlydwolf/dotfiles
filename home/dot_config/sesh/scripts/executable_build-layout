@@ -56,10 +56,10 @@ apply_dotfiles_work() {
 build_agent_coding() {
   tmux rename-window -t "${session}:1" "Agent"
 
-  tmux new-window -t "${session}" -n "Docs" -c "$root"
+  tmux new-window -t "${session}:" -n "Docs" -c "$root"
   apply_agent_work "Docs" "$root"
 
-  tmux new-window -t "${session}" -n "Code" -c "$root"
+  tmux new-window -t "${session}:" -n "Code" -c "$root"
   tmux send-keys -t "${session}:Code" "nvim" C-m
 
   tmux select-window -t "${session}:Agent"
@@ -68,10 +68,10 @@ build_agent_coding() {
 build_agent_learning() {
   tmux rename-window -t "${session}:1" "Agent"
 
-  tmux new-window -t "${session}" -n "Docs" -c "$root"
+  tmux new-window -t "${session}:" -n "Docs" -c "$root"
   apply_agent_read "Docs" "$root"
 
-  tmux new-window -t "${session}" -n "Code" -c "$root"
+  tmux new-window -t "${session}:" -n "Code" -c "$root"
   tmux send-keys -t "${session}:Code" "nvim" C-m
 
   tmux select-window -t "${session}:Agent"
@@ -80,10 +80,10 @@ build_agent_learning() {
 build_dotfiles() {
   tmux rename-window -t "${session}:1" "Agent"
 
-  tmux new-window -t "${session}" -n "Ansible-Chezmoi" -c "$root"
+  tmux new-window -t "${session}:" -n "Ansible-Chezmoi" -c "$root"
   apply_dotfiles_work "Ansible-Chezmoi"
 
-  tmux new-window -t "${session}" -n "Browse" -c "$root"
+  tmux new-window -t "${session}:" -n "Browse" -c "$root"
   tmux send-keys -t "${session}:Browse" "yazi" C-m
 
   tmux select-window -t "${session}:Agent"
@@ -93,7 +93,7 @@ build_learning() {
   tmux rename-window -t "${session}:1" "Code"
   tmux send-keys -t "${session}:Code" "nvim" C-m
 
-  tmux new-window -t "${session}" -n "Browse" -c "$root"
+  tmux new-window -t "${session}:" -n "Browse" -c "$root"
 
   tmux select-window -t "${session}:Code"
 }
