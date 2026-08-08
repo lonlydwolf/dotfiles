@@ -1,4 +1,10 @@
 ---
+- name: Ensure Screenshots directory exists
+  ansible.builtin.file:
+    path: "{{ ansible_facts.env.HOME }}/Pictures/ScreenShots"
+    state: directory
+    mode: '0755'
+
 - name: Apply macOS defaults
   community.general.osx_defaults:
     domain: "{{ item.domain }}"
