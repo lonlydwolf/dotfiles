@@ -15,6 +15,9 @@ export VISUAL="nvim"
 # ---------- Starship ----------
 export STARSHIP_CONFIG="$XDG_CONFIG_HOME/starship/starship.toml"
 
+# ---------- Pi Agent ----------
+export PI_CODING_AGENT_DIR="$XDG_CONFIG_HOME/pi"
+
 # ---------- PATH ----------
 # Personal binaries/scripts
 export PATH="$HOME/.local/bin:$PATH"

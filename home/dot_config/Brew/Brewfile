@@ -190,6 +190,13 @@ vscode "github.codespaces" # GitHub Codespaces integration
 vscode "pkief.material-icon-theme"        # Material-style file icons
 vscode "vscode-icons-team.vscode-icons"   # Alternative file icon theme
 
+# ============================================================
+# NPM
+# ============================================================
+
+# --- Purpose: AI Tool ---
+npm "@earendil-works/pi-coding-agent"
+
 
 # ============================================================
 # TEMP
