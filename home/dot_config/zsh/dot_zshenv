@@ -18,6 +18,12 @@ export STARSHIP_CONFIG="$XDG_CONFIG_HOME/starship/starship.toml"
 # ---------- Pi Agent ----------
 export PI_CODING_AGENT_DIR="$XDG_CONFIG_HOME/pi"
 
+if [[ -r "$HOME/.config/secrets/api-keys" ]]; then
+    source "$HOME/.config/secrets/api-keys"
+fi
+
+export DATALAB_PROCESSING_LOCATION='eu'
+
 # ---------- PATH ----------
 # Personal binaries/scripts
 export PATH="$HOME/.local/bin:$PATH"
