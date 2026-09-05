@@ -29,7 +29,7 @@ packages:
 
 # install the full Brewfile (interactive: casks may prompt for sudo)
 install:
-    brew bundle install --file={{brewfile}}
+    brew bundle install --file={{brewfile}} --verbose
 
 # install only the # @core subset — a usable machine first (used by bootstrap)
 install-core:
@@ -38,7 +38,7 @@ install-core:
     core="$(mktemp)"
     trap 'rm -f "$core"' EXIT
     grep '# @core' {{brewfile}} > "$core"
-    brew bundle install --file="$core"
+    brew bundle install --file="$core" --verbose
 
 # cleanup report (feeds prune)
 audit:
