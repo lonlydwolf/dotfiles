@@ -87,6 +87,7 @@ brew "age"    # Simple, modern, secure file encryption
 # --- Purpose: Media ---
 brew "ffmpeg"      # Play, record, convert, and stream select audio and video codecs
 brew "imagemagick" # Tools and libraries to manipulate images in select formats
+brew "yt-dlp"      # Feature-rich command-line audio/video downloader
 
 
 # ============================================================
@@ -111,7 +112,6 @@ cask "discord"     # Voice and text chat software
 cask "telegram"    # Messaging app with a focus on speed and security
 cask "whatsapp"    # Native desktop client for WhatsApp
 cask "zoom"        # Video communication and virtual meeting platform
-cask "bluebubbles" # Server for forwarding iMessages
 
 # --- Purpose: Terminal ---
 cask "ghostty" # @core  Terminal emulator that uses platform-native UI and GPU acceleration
