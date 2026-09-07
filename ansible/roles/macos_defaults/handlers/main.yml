@@ -1,5 +1,5 @@
 ---
-# Refreshes app-level defaults. KeyRepeat/InitialKeyRepeat need a full logout, not this.
+# Refreshes app-level defaults. KeyRepeat/InitialKeyRepeat and spans-displays need a full logout, not this.
 - name: refresh macos ui
   ansible.builtin.command: killall Dock Finder SystemUIServer
   failed_when: false
