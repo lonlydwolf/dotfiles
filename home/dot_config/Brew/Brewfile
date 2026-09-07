@@ -89,6 +89,8 @@ brew "ffmpeg"      # Play, record, convert, and stream select audio and video co
 brew "imagemagick" # Tools and libraries to manipulate images in select formats
 brew "yt-dlp"      # Feature-rich command-line audio/video downloader
 
+# --- Purpose: Productivity ---
+brew "asmvik/formulae/yabai"    # A tiling window manager for macOS based on binary space partitioning.
 
 # ============================================================
 # CASK
@@ -127,7 +129,6 @@ cask "raindropio" # All-in-one bookmark manager
 cask "raycast"    # Control your tools with a few keystrokes
 cask "handy"      # Speech to text application
 cask "blip"       # Send any size file between devices
-cask "amethyst"   # Automatic tiling window manager similar to xmonad
 
 # --- Purpose: Security ---
 cask "proton-pass" # Desktop client for Proton Pass
