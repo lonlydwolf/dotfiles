@@ -116,7 +116,8 @@ done
     background.border_color="$BORDER"
 
 # media-control streams changes into this custom event, avoiding a polling
-# delay when playback is paused or resumed.
+# delay when playback is paused or resumed. A slow poll below reconciles state
+# when MediaRemote misses the terminal event after a player is closed.
 "$SKETCHYBAR" --add event media_update
 
 # Now Playing appears in the center when macOS has an active media session.
@@ -124,6 +125,7 @@ done
   --set media \
     drawing=off \
     updates=on \
+    update_freq=5 \
     icon="󰎆" \
     icon.color="$MAUVE" \
     label.max_chars=42 \
