@@ -88,9 +88,12 @@ brew "age"    # Simple, modern, secure file encryption
 brew "ffmpeg"      # Play, record, convert, and stream select audio and video codecs
 brew "imagemagick" # Tools and libraries to manipulate images in select formats
 brew "yt-dlp"      # Feature-rich command-line audio/video downloader
+brew "media-control" # Control and observe media playback from the command-line
 
 # --- Purpose: Productivity ---
 brew "asmvik/formulae/yabai"    # A tiling window manager for macOS based on binary space partitioning.
+brew "felixkratz/formulae/borders"      # A window border system for macOS
+brew "felixkratz/formulae/sketchybar"   # Custom macOS statusbar with shell plugin, interaction and graph support
 
 # ============================================================
 # CASK
@@ -146,6 +149,7 @@ cask "vlc" # Multimedia player
 
 # --- Purpose: Font ---
 cask "font-jetbrains-mono-nerd-font" # @core  JetBrains Mono Nerd Font
+cask "font-sketchybar-app-font"      # Sketchybar Font For App Icons
 
 
 # ============================================================
