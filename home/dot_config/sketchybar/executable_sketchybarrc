@@ -1,0 +1,192 @@
+#!/usr/bin/env bash
+# shellcheck disable=SC2016
+
+SKETCHYBAR=/opt/homebrew/bin/sketchybar
+YABAI=/opt/homebrew/bin/yabai
+JQ=/opt/homebrew/bin/jq
+CONFIG_DIR="${CONFIG_DIR:-$HOME/.config/sketchybar}"
+PLUGIN_DIR="$CONFIG_DIR/plugins"
+
+# Catppuccin Mocha
+TRANSPARENT=0x00000000
+BASE=0xff1e1e2e
+SURFACE=0xc41e1e2e
+BORDER=0x995c6370
+FOREGROUND=0xffcdd6f4
+MUTED=0xff6c7086
+BLUE=0xff89b4fa
+MAUVE=0xffcba6f7
+
+"$SKETCHYBAR" --hotload true
+
+# A transparent outer bar lets the individual sections appear as floating capsules.
+"$SKETCHYBAR" --bar \
+  position=top \
+  height=36 \
+  y_offset=4 \
+  margin=8 \
+  blur_radius=24 \
+  color="$TRANSPARENT" \
+  display=all \
+  padding_left=4 \
+  padding_right=4
+
+default=(
+  padding_left=4
+  padding_right=4
+  icon.font="JetBrainsMono Nerd Font:Semibold:14.0"
+  label.font="JetBrainsMono Nerd Font:Medium:13.0"
+  icon.color="$FOREGROUND"
+  label.color="$FOREGROUND"
+  icon.padding_left=5
+  icon.padding_right=4
+  label.padding_left=4
+  label.padding_right=5
+  background.height=28
+  background.corner_radius=9
+)
+"$SKETCHYBAR" --default "${default[@]}"
+
+# Query yabai so the bar follows the spaces that actually exist. Fall back to
+# five spaces when yabai is still starting during a SketchyBar reload.
+SPACE_IDS=()
+if [[ -x "$YABAI" && -x "$JQ" ]]; then
+  while IFS= read -r sid; do
+    [[ "$sid" =~ ^[0-9]+$ ]] && SPACE_IDS+=("$sid")
+  done < <("$YABAI" -m query --spaces 2>/dev/null | "$JQ" -r '.[].index' 2>/dev/null)
+fi
+[[ ${#SPACE_IDS[@]} -gt 0 ]] || SPACE_IDS=(1 2 3 4 5)
+
+SPACE_ITEMS=()
+for sid in "${SPACE_IDS[@]}"; do
+  name="space.$sid"
+  SPACE_ITEMS+=("$name")
+  space=(
+    space="$sid"
+    icon="$sid"
+    width=26
+    icon.width=26
+    icon.color="$MUTED"
+    icon.highlight_color="$BASE"
+    icon.align=center
+    icon.padding_left=0
+    icon.padding_right=0
+    label.drawing=off
+    background.color="$BLUE"
+    background.corner_radius=7
+    background.height=22
+    background.drawing=off
+    script='sketchybar --set "$NAME" background.drawing="$SELECTED" icon.highlight="$SELECTED"'
+    click_script="$YABAI -m space --focus $sid"
+  )
+  "$SKETCHYBAR" --add space "$name" left \
+    --set "$name" "${space[@]}"
+done
+
+# Keep spaces and the current app in one continuous capsule. This avoids the
+# overlapping rounded edges produced by two adjacent background items.
+"$SKETCHYBAR" --add item left_separator left \
+  --set left_separator \
+    icon.drawing=off \
+    label="│" \
+    label.color="$BORDER" \
+    label.padding_left=2 \
+    label.padding_right=2
+
+"$SKETCHYBAR" --add item front_app left \
+  --set front_app \
+    padding_left=1 \
+    padding_right=4 \
+    icon=":default:" \
+    icon.font="sketchybar-app-font:Regular:16.0" \
+    icon.color="$MAUVE" \
+    label.drawing=on \
+    label.max_chars=24 \
+    script="$PLUGIN_DIR/front_app.sh" \
+  --subscribe front_app front_app_switched
+
+"$SKETCHYBAR" --add bracket left_bracket \
+    "${SPACE_ITEMS[@]}" left_separator front_app \
+  --set left_bracket \
+    background.drawing=on \
+    background.color="$SURFACE" \
+    background.height=28 \
+    background.corner_radius=9 \
+    background.border_width=1 \
+    background.border_color="$BORDER"
+
+# media-control streams changes into this custom event, avoiding a polling
+# delay when playback is paused or resumed.
+"$SKETCHYBAR" --add event media_update
+
+# Now Playing appears in the center when macOS has an active media session.
+"$SKETCHYBAR" --add item media center \
+  --set media \
+    drawing=off \
+    updates=on \
+    icon="󰎆" \
+    icon.color="$MAUVE" \
+    label.max_chars=42 \
+    background.drawing=on \
+    background.color="$SURFACE" \
+    background.height=28 \
+    background.corner_radius=9 \
+    background.border_width=1 \
+    background.border_color="$BORDER" \
+    script="$PLUGIN_DIR/media.sh" \
+    click_script="$PLUGIN_DIR/media_click.sh" \
+  --subscribe media media_update system_woke
+
+# Keep one persistent media-control stream. The watcher uses a PID file to
+# avoid duplicates when SketchyBar hot-reloads its configuration.
+nohup "$PLUGIN_DIR/media_watcher.sh" >/dev/null 2>&1 &
+
+# Right-side system capsule. Items are added from the outer edge inward.
+# A minute-aligned event avoids update_freq drifting from the system clock.
+"$SKETCHYBAR" --add event clock_update
+"$SKETCHYBAR" --add item clock right \
+  --set clock \
+    icon="󰃭" \
+    icon.color="$BLUE" \
+    script='sketchybar --set "$NAME" label="$(date "+%a %d · %H:%M")"' \
+  --subscribe clock clock_update system_woke
+
+nohup "$PLUGIN_DIR/clock_watcher.sh" >/dev/null 2>&1 &
+
+"$SKETCHYBAR" --add item battery right \
+  --set battery \
+    update_freq=120 \
+    script="$PLUGIN_DIR/battery.sh" \
+  --subscribe battery system_woke power_source_change
+
+"$SKETCHYBAR" --add item volume right \
+  --set volume \
+    script="$PLUGIN_DIR/volume.sh" \
+    click_script="$PLUGIN_DIR/toggle_volume.sh" \
+  --subscribe volume volume_change system_woke
+
+"$SKETCHYBAR" --add item system_separator right \
+  --set system_separator \
+    icon.drawing=off \
+    label="│" \
+    label.color="$BORDER" \
+    label.padding_left=2 \
+    label.padding_right=2
+
+"$SKETCHYBAR" --add item glucose right \
+  --set glucose \
+    update_freq=60 \
+    script="$PLUGIN_DIR/glucose.sh" \
+  --subscribe glucose system_woke
+
+"$SKETCHYBAR" --add bracket system_bracket \
+    glucose system_separator volume battery clock \
+  --set system_bracket \
+    background.drawing=on \
+    background.color="$SURFACE" \
+    background.height=28 \
+    background.corner_radius=9 \
+    background.border_width=1 \
+    background.border_color="$BORDER"
+
+"$SKETCHYBAR" --update
