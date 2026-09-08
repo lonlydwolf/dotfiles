@@ -175,7 +175,7 @@ nohup "$PLUGIN_DIR/clock_watcher.sh" >/dev/null 2>&1 &
 
 "$SKETCHYBAR" --add item glucose right \
   --set glucose \
-    update_freq=60 \
+    update_freq=15 \
     script="$PLUGIN_DIR/glucose.sh" \
   --subscribe glucose system_woke
 

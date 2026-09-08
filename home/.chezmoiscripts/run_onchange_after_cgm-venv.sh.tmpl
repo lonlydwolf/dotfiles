@@ -1,0 +1,15 @@
+#!/bin/sh
+# .venv has machine-specific paths, so it is regenerated rather than committed.
+# requirements.txt hash: {{ include "dot_config/cgm/requirements.txt" | sha256sum }}
+set -eu
+
+dir="$HOME/.config/cgm"
+if [ -x /opt/homebrew/bin/python3 ]; then
+  python=/opt/homebrew/bin/python3
+else
+  python="$(command -v python3)"
+fi
+
+"$python" -m venv "$dir/.venv"
+"$dir/.venv/bin/pip" install --quiet --upgrade pip
+"$dir/.venv/bin/pip" install --quiet -r "$dir/requirements.txt"

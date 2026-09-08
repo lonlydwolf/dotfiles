@@ -1,0 +1,3 @@
+# Dependencies for cgm_client.py; the chezmoi run_onchange script rebuilds .venv.
+libre-linkup-py   # import name: libre_link_up
+pydantic

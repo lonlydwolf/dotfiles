@@ -1,0 +1,183 @@
+#!/usr/bin/env python3
+"""Fetch and cache neutral CGM data from LibreLinkUp.
+
+Credentials are loaded from ~/.config/cgm/.env. The command always emits one
+JSON object so status-bar adapters can fail closed without parsing tracebacks.
+"""
+
+from __future__ import annotations
+
+import fcntl
+import json
+import os
+import sys
+import tempfile
+import time
+from pathlib import Path
+from typing import Any
+
+CONFIG_DIR = Path.home() / ".config" / "cgm"
+ENV_FILE = CONFIG_DIR / ".env"
+CACHE_DIR = Path(os.environ.get("XDG_CACHE_HOME", Path.home() / ".cache")) / "cgm"
+CACHE_FILE = CACHE_DIR / "latest.json"
+LOCK_FILE = CACHE_DIR / "refresh.lock"
+
+CACHE_TTL = 55
+FAILURE_TTL = 15
+
+TREND_ARROWS = {
+    1: "",  # falling quickly
+    2: "",  # falling
+    3: "",  # stable
+    4: "",  # rising
+    5: "",  # rising quickly
+}
+
+
+def load_env_file(path: Path) -> None:
+    if not path.exists():
+        return
+
+    for line in path.read_text().splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+        key, _, value = line.partition("=")
+        os.environ.setdefault(key.strip(), value.strip())
+
+
+def classify(value: int) -> str:
+    if value < 70 or value > 180:
+        return "critical"
+    if value < 80 or value > 160:
+        return "warning"
+    return "normal"
+
+
+def unavailable(now: int) -> dict[str, Any]:
+    return {
+        "available": False,
+        "value": None,
+        "trend": "",
+        "severity": "unavailable",
+        "unit": "mg/dL",
+        "fetched_at": now,
+    }
+
+
+def read_cache() -> dict[str, Any] | None:
+    try:
+        data = json.loads(CACHE_FILE.read_text())
+        return data if isinstance(data, dict) else None
+    except (OSError, json.JSONDecodeError):
+        return None
+
+
+def is_fresh(data: dict[str, Any] | None, now: int) -> bool:
+    if not data:
+        return False
+
+    fetched_at = data.get("fetched_at")
+    if not isinstance(fetched_at, int):
+        return False
+
+    age = now - fetched_at
+    ttl = CACHE_TTL if data.get("available") is True else FAILURE_TTL
+    return 0 <= age < ttl
+
+
+def write_cache(data: dict[str, Any]) -> None:
+    CACHE_DIR.mkdir(mode=0o700, parents=True, exist_ok=True)
+    try:
+        CACHE_DIR.chmod(0o700)
+    except OSError:
+        pass
+
+    fd, temporary_name = tempfile.mkstemp(prefix="latest.", dir=CACHE_DIR)
+    try:
+        os.fchmod(fd, 0o600)
+        with os.fdopen(fd, "w") as temporary:
+            json.dump(data, temporary, ensure_ascii=False, separators=(",", ":"))
+            temporary.write("\n")
+        os.replace(temporary_name, CACHE_FILE)
+    finally:
+        try:
+            os.unlink(temporary_name)
+        except FileNotFoundError:
+            pass
+
+
+def fetch(now: int) -> dict[str, Any]:
+    load_env_file(ENV_FILE)
+
+    username = os.environ.get("LIBRE_LINK_UP_USERNAME")
+    password = os.environ.get("LIBRE_LINK_UP_PASSWORD")
+    url = os.environ.get("LIBRE_LINK_UP_URL", "https://api.libreview.io")
+
+    if not username or not password:
+        raise RuntimeError("missing LIBRE_LINK_UP_USERNAME/PASSWORD")
+
+    from libre_link_up import LibreLinkUpClient
+
+    client = LibreLinkUpClient(username=username, password=password, url=url)
+    client.login()
+    measurement = client.get_raw_graph_readings()["data"]["connection"][
+        "glucoseMeasurement"
+    ]
+
+    value = int(measurement["ValueInMgPerDl"])
+    trend_number = int(measurement.get("TrendArrow") or 3)
+
+    return {
+        "available": True,
+        "value": value,
+        "trend": TREND_ARROWS.get(trend_number, ""),
+        "severity": classify(value),
+        "unit": "mg/dL",
+        "fetched_at": now,
+    }
+
+
+def emit(data: dict[str, Any]) -> None:
+    print(json.dumps(data, ensure_ascii=False, separators=(",", ":")))
+
+
+def main() -> int:
+    now = int(time.time())
+    cached = read_cache()
+    if is_fresh(cached, now):
+        emit(cached)
+        return 0
+
+    CACHE_DIR.mkdir(mode=0o700, parents=True, exist_ok=True)
+    with LOCK_FILE.open("a+") as lock:
+        try:
+            LOCK_FILE.chmod(0o600)
+        except OSError:
+            pass
+        fcntl.flock(lock.fileno(), fcntl.LOCK_EX)
+
+        # Another consumer may have refreshed while this process waited.
+        now = int(time.time())
+        cached = read_cache()
+        if is_fresh(cached, now):
+            emit(cached)
+            return 0
+
+        try:
+            result = fetch(now)
+        except Exception as exc:  # noqa: BLE001 - status bars must fail closed
+            print(f"CGM refresh failed: {exc}", file=sys.stderr)
+            result = unavailable(now)
+
+        try:
+            write_cache(result)
+        except OSError as exc:
+            print(f"CGM cache write failed: {exc}", file=sys.stderr)
+
+        emit(result)
+        return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

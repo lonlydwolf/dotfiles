@@ -1,36 +1,36 @@
 #!/usr/bin/env bash
-# Display the LibreLinkUp reading already used by tmux. glucose-status.sh owns
-# the shared 55-second cache, so both bars can use it without polling the API
-# independently.
+# Render the neutral CGM backend for SketchyBar.
 set -u
 
 SKETCHYBAR=/opt/homebrew/bin/sketchybar
-STATUS_SCRIPT="$HOME/.config/tmux/scripts/glucose-status.sh"
+CGM_STATUS="$HOME/.config/cgm/cgm-status.sh"
+JQ=/opt/homebrew/bin/jq
 
 GREEN=0xffa6e3a1
 YELLOW=0xfff9e2af
 RED=0xfff38ba8
 MUTED=0xff6c7086
 
-reading=""
-if [[ -x "$STATUS_SCRIPT" ]]; then
-  reading="$($STATUS_SCRIPT 2>/dev/null || true)"
+fields=""
+if [[ -x "$CGM_STATUS" && -x "$JQ" ]]; then
+  payload="$($CGM_STATUS 2>/dev/null || true)"
+  fields="$(printf '%s' "$payload" | "$JQ" -r \
+    'if .available == true then [.value, .trend, .severity] | @tsv else empty end' \
+    2>/dev/null || true)"
 fi
 
-value="${reading%% *}"
-
-if [[ "$value" =~ ^[0-9]+$ ]]; then
-  if ((value < 70 || value > 180)); then
-    color="$RED"
-  elif ((value < 80 || value > 160)); then
-    color="$YELLOW"
-  else
-    color="$GREEN"
-  fi
-  label="$reading"
+if [[ -n "$fields" ]]; then
+  IFS=$'\t' read -r value trend severity <<<"$fields"
+  label="$value $trend"
+  case "$severity" in
+    critical) color="$RED" ;;
+    warning) color="$YELLOW" ;;
+    normal) color="$GREEN" ;;
+    *) color="$MUTED" ;;
+  esac
 else
-  color="$MUTED"
   label="--"
+  color="$MUTED"
 fi
 
 "$SKETCHYBAR" --set "$NAME" \

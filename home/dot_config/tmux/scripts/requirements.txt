@@ -1,3 +1,0 @@
-# Deps for glucose_client.py — rebuilt into .venv by chezmoi run_onchange. Unpinned (latest).
-libre-linkup-py   # import name: libre_link_up
-pydantic
