@@ -57,3 +57,5 @@ macos_defaults:
   - { domain: com.apple.dock, key: mru-spaces, type: bool, value: false }
   - { domain: com.apple.spaces, key: spans-displays, type: bool, value: false }
 
+  # Menu bar: “Automatically hide and show” → Always
+  - { domain: com.apple.controlcenter, key: AutoHideMenuBarOption, type: int, value: 0 }
