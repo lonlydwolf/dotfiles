@@ -1,0 +1,8 @@
+#!/bin/sh
+# Retire CGM workers started before the bounded refresh watchdog was installed.
+# A killed refresh is harmless; the status bars retry against the shared cache.
+pattern="$HOME/.config/cgm/.venv/bin/python3 $HOME/.config/cgm/cgm_client.py"
+
+pkill -TERM -f "$pattern" 2>/dev/null || true
+sleep 1
+pkill -KILL -f "$pattern" 2>/dev/null || true

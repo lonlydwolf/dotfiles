@@ -24,6 +24,8 @@ LOCK_FILE = CACHE_DIR / "refresh.lock"
 
 CACHE_TTL = 55
 FAILURE_TTL = 15
+MAX_STALE_AGE = 5 * 60
+HTTP_TIMEOUT = (5, 10)  # connect, read
 
 TREND_ARROWS = {
     1: "",  # falling quickly
@@ -54,8 +56,8 @@ def classify(value: int) -> str:
     return "normal"
 
 
-def unavailable(now: int) -> dict[str, Any]:
-    return {
+def unavailable(now: int, error: str | None = None) -> dict[str, Any]:
+    result: dict[str, Any] = {
         "available": False,
         "value": None,
         "trend": "",
@@ -63,6 +65,9 @@ def unavailable(now: int) -> dict[str, Any]:
         "unit": "mg/dL",
         "fetched_at": now,
     }
+    if error:
+        result["error"] = error
+    return result
 
 
 def read_cache() -> dict[str, Any] | None:
@@ -117,13 +122,29 @@ def fetch(now: int) -> dict[str, Any]:
     if not username or not password:
         raise RuntimeError("missing LIBRE_LINK_UP_USERNAME/PASSWORD")
 
+    import requests
     from libre_link_up import LibreLinkUpClient
 
-    client = LibreLinkUpClient(username=username, password=password, url=url)
-    client.login()
-    measurement = client.get_raw_graph_readings()["data"]["connection"][
-        "glucoseMeasurement"
-    ]
+    # libre-linkup-py does not currently expose a timeout and calls requests
+    # directly. Bound all of its HTTP calls so a status-bar refresh cannot hold
+    # the cache lock forever.
+    original_request = requests.sessions.Session.request
+
+    def request_with_timeout(
+        session: requests.Session, method: str, url: str, **kwargs: Any
+    ) -> requests.Response:
+        kwargs.setdefault("timeout", HTTP_TIMEOUT)
+        return original_request(session, method, url, **kwargs)
+
+    requests.sessions.Session.request = request_with_timeout
+    try:
+        client = LibreLinkUpClient(username=username, password=password, url=url)
+        client.login()
+        measurement = client.get_raw_graph_readings()["data"]["connection"][
+            "glucoseMeasurement"
+        ]
+    finally:
+        requests.sessions.Session.request = original_request
 
     value = int(measurement["ValueInMgPerDl"])
     trend_number = int(measurement.get("TrendArrow") or 3)
@@ -155,9 +176,26 @@ def main() -> int:
             LOCK_FILE.chmod(0o600)
         except OSError:
             pass
-        fcntl.flock(lock.fileno(), fcntl.LOCK_EX)
+        try:
+            fcntl.flock(lock.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            # Another status-bar process is refreshing. Never queue behind it.
+            # A recent successful value is useful during a short refresh, but
+            # an older one must not be presented as a current reading.
+            fetched_at = cached.get("fetched_at") if cached else None
+            age = now - fetched_at if isinstance(fetched_at, int) else None
+            if (
+                cached is not None
+                and cached.get("available") is True
+                and age is not None
+                and 0 <= age <= MAX_STALE_AGE
+            ):
+                emit(cached)
+            else:
+                emit(unavailable(now, "refresh in progress; cached value is too old"))
+            return 0
 
-        # Another consumer may have refreshed while this process waited.
+        # Another consumer may have refreshed before we acquired the lock.
         now = int(time.time())
         cached = read_cache()
         if is_fresh(cached, now):
@@ -168,7 +206,7 @@ def main() -> int:
             result = fetch(now)
         except Exception as exc:  # noqa: BLE001 - status bars must fail closed
             print(f"CGM refresh failed: {exc}", file=sys.stderr)
-            result = unavailable(now)
+            result = unavailable(now, str(exc))
 
         try:
             write_cache(result)
