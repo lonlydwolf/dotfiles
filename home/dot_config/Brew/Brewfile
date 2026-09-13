@@ -51,6 +51,7 @@ brew "dockerfmt"                # Dockerfile format and parser. a modern dockfmt
 brew "hadolint"                 # Smarter Dockerfile linter to validate best practices
 brew "shellcheck"               # Static analysis and lint tool, for (ba)sh scripts
 brew "cppcheck"                 # Static analysis of C and C++ code
+brew "clang-format"             # Formatting tools for C, C++, Obj-C
 
 # --- Purpose: Languages & Runtimes ---
 brew "node"      # Open-source, cross-platform JavaScript runtime environment
