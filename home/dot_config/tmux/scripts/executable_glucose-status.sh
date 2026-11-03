@@ -10,7 +10,7 @@ fi
 
 payload="$($CGM_STATUS 2>/dev/null || true)"
 text="$(printf '%s' "$payload" | "$JQ" -r \
-  'if .available == true then "\(.value) \(.trend)" else "--" end' \
+  'if .available == true then .text else "--" end' \
   2>/dev/null || true)"
 
 printf '%s' "${text:---}"

@@ -15,13 +15,12 @@ fields=""
 if [[ -x "$CGM_STATUS" && -x "$JQ" ]]; then
   payload="$($CGM_STATUS 2>/dev/null || true)"
   fields="$(printf '%s' "$payload" | "$JQ" -r \
-    'if .available == true then [.value, .trend, .severity] | @tsv else empty end' \
+    'if .available == true then [.text, .severity] | @tsv else empty end' \
     2>/dev/null || true)"
 fi
 
 if [[ -n "$fields" ]]; then
-  IFS=$'\t' read -r value trend severity <<<"$fields"
-  label="$value $trend"
+  IFS=$'\t' read -r label severity <<<"$fields"
   case "$severity" in
     critical) color="$RED" ;;
     warning) color="$YELLOW" ;;

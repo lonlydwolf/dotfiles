@@ -13,6 +13,7 @@ import os
 import sys
 import tempfile
 import time
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -25,6 +26,7 @@ LOCK_FILE = CACHE_DIR / "refresh.lock"
 CACHE_TTL = 55
 FAILURE_TTL = 15
 MAX_STALE_AGE = 5 * 60
+STALE_AFTER = 10 * 60  # sensor age; LibreLinkUp normally updates every minute
 HTTP_TIMEOUT = (5, 10)  # connect, read
 
 TREND_ARROWS = {
@@ -147,6 +149,15 @@ def fetch(now: int) -> dict[str, Any]:
         requests.sessions.Session.request = original_request
 
     value = int(measurement["ValueInMgPerDl"])
+    try:
+        # FactoryTimestamp is UTC; Timestamp is phone-local.
+        measured_at = int(
+            datetime.strptime(measurement["FactoryTimestamp"], "%m/%d/%Y %I:%M:%S %p")
+            .replace(tzinfo=UTC)
+            .timestamp()
+        )
+    except (KeyError, TypeError, ValueError):
+        measured_at = None  # unknown age is shown as stale
     trend_number = int(measurement.get("TrendArrow") or 3)
 
     return {
@@ -156,10 +167,20 @@ def fetch(now: int) -> dict[str, Any]:
         "severity": classify(value),
         "unit": "mg/dL",
         "fetched_at": now,
+        "measured_at": measured_at,
     }
 
 
 def emit(data: dict[str, Any]) -> None:
+    # Age is computed at display time so cached readings keep ageing.
+    if data.get("available") is True:
+        measured_at = data.get("measured_at")
+        age = int(time.time()) - measured_at if isinstance(measured_at, int) else None
+        stale = age is None or not -60 <= age <= STALE_AFTER
+        text = f"{data['value']} {data['trend']}"
+        if stale:
+            text += f" {age // 60 if age is not None else '?'}m"
+        data = {**data, "text": text, "severity": "stale" if stale else data["severity"]}
     print(json.dumps(data, ensure_ascii=False, separators=(",", ":")))
 
 
