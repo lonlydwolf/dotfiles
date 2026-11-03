@@ -158,12 +158,11 @@ def fetch(now: int) -> dict[str, Any]:
         )
     except (KeyError, TypeError, ValueError):
         measured_at = None  # unknown age is shown as stale
-    trend_number = int(measurement.get("TrendArrow") or 3)
 
     return {
         "available": True,
         "value": value,
-        "trend": TREND_ARROWS.get(trend_number, ""),
+        "trend": TREND_ARROWS.get(measurement.get("TrendArrow"), "?"),
         "severity": classify(value),
         "unit": "mg/dL",
         "fetched_at": now,
