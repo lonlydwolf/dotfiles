@@ -25,7 +25,6 @@ LOCK_FILE = CACHE_DIR / "refresh.lock"
 
 CACHE_TTL = 55
 FAILURE_TTL = 15
-MAX_STALE_AGE = 5 * 60
 STALE_AFTER = 10 * 60  # sensor age; LibreLinkUp normally updates every minute
 HTTP_TIMEOUT = (5, 10)  # connect, read
 
@@ -89,7 +88,7 @@ def is_fresh(data: dict[str, Any] | None, now: int) -> bool:
         return False
 
     age = now - fetched_at
-    ttl = CACHE_TTL if data.get("available") is True else FAILURE_TTL
+    ttl = FAILURE_TTL if data.get("error") else CACHE_TTL
     return 0 <= age < ttl
 
 
@@ -114,7 +113,7 @@ def write_cache(data: dict[str, Any]) -> None:
             pass
 
 
-def fetch(now: int) -> dict[str, Any]:
+def fetch() -> dict[str, Any]:
     load_env_file(ENV_FILE)
 
     username = os.environ.get("LIBRE_LINK_UP_USERNAME")
@@ -165,7 +164,6 @@ def fetch(now: int) -> dict[str, Any]:
         "trend": TREND_ARROWS.get(measurement.get("TrendArrow"), "?"),
         "severity": classify(value),
         "unit": "mg/dL",
-        "fetched_at": now,
         "measured_at": measured_at,
     }
 
@@ -199,20 +197,12 @@ def main() -> int:
         try:
             fcntl.flock(lock.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
         except BlockingIOError:
-            # Another status-bar process is refreshing. Never queue behind it.
-            # A recent successful value is useful during a short refresh, but
-            # an older one must not be presented as a current reading.
-            fetched_at = cached.get("fetched_at") if cached else None
-            age = now - fetched_at if isinstance(fetched_at, int) else None
-            if (
-                cached is not None
-                and cached.get("available") is True
-                and age is not None
-                and 0 <= age <= MAX_STALE_AGE
-            ):
+            # Another status-bar process is refreshing. Never queue behind it;
+            # emit() marks an old reading as stale.
+            if cached is not None and cached.get("available") is True:
                 emit(cached)
             else:
-                emit(unavailable(now, "refresh in progress; cached value is too old"))
+                emit(unavailable(now, "refresh in progress"))
             return 0
 
         # Another consumer may have refreshed before we acquired the lock.
@@ -223,10 +213,16 @@ def main() -> int:
             return 0
 
         try:
-            result = fetch(now)
+            result = fetch()
         except Exception as exc:  # noqa: BLE001 - status bars must fail closed
             print(f"CGM refresh failed: {exc}", file=sys.stderr)
-            result = unavailable(now, str(exc))
+            # Keep the last reading; emit() marks it stale once it is old.
+            if cached is not None and cached.get("available") is True:
+                result = {**cached, "error": str(exc)}
+            else:
+                result = unavailable(now, str(exc))
+        # Start the cooldown when the request ends, not when it began.
+        result["fetched_at"] = int(time.time())
 
         try:
             write_cache(result)
