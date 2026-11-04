@@ -1,3 +1,15 @@
 [user]
 	name = LonlyDWolf
 	email = contact@ahmadmollaei.dev
+	# Use the existing key through ssh-agent, including in noninteractive agents.
+	signingKey = ~/.ssh/github_ed25519.pub
+
+[commit]
+	gpgsign = true
+
+[gpg]
+	format = ssh
+
+[gpg "ssh"]
+	program = /usr/bin/ssh-keygen
+	allowedSignersFile = ~/.config/git/allowed_signers

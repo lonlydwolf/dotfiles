@@ -59,3 +59,39 @@ Freshness is by hand: `topgrade` for packages, `chezmoi apply
 Small secrets live here age-encrypted (`encrypted_*.age`); the private key and
 SSH/GPG stay on offline backup and are restored by hand (step 1); everything
 else is re-authenticated on rebuild — nothing sensitive is ever committed.
+
+## Commit signing
+
+Git automatically signs new commits with SSH. Jujutsu signs commits authored
+by the configured user as they are created or modified (`signing.behavior =
+"own"`), without waiting for a push. Both use `~/.ssh/github_ed25519.pub`
+through the macOS SSH agent and verify against `~/.config/git/allowed_signers`.
+The expected key fingerprint is
+`SHA256:XA4Gi8DOAuoaOAvbQx7Ofpu9aIveNDhoaS/EiKv1Cc4`.
+
+On a rebuilt machine, restore the existing SSH key pair from backup, then load
+it into the macOS agent (interactive once if its passphrase is needed):
+
+```sh
+/usr/bin/ssh-add --apple-use-keychain ~/.ssh/github_ed25519
+ssh-add -l
+```
+
+T3-Code and other coding agents inherit the global Git/jj settings; no shell
+alias or signing flag is required. Their process environment must expose the
+loaded agent through `SSH_AUTH_SOCK`. If it is missing, launch the app from a
+shell with the macOS agent socket exported (restart an already running app):
+
+```sh
+export SSH_AUTH_SOCK="$(launchctl getenv SSH_AUTH_SOCK)"
+```
+
+The public-key path deliberately requires the agent, so unattended commits do
+not prompt for the private key's passphrase. Agent sandboxes must allow access
+to that socket. Repository settings or explicit `--no-gpg-sign`/jj signing
+overrides can still disable these defaults.
+
+For GitHub's Verified badge, add this same public key to the account as a
+**Signing Key**, even if it is already registered for authentication, and
+ensure `contact@ahmadmollaei.dev` is a verified account email. Local signature
+verification does not require GitHub registration.
