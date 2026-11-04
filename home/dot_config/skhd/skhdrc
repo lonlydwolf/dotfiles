@@ -1,0 +1,31 @@
+# yabai hotkeys. hyper = cmd + alt + ctrl + shift (Caps Lock via Hyperkey).
+# hyper - t is used elsewhere; hyper - v belongs to Maccy.
+# `space --focus` needs yabai's scripting addition, which macOS 27 with SIP on
+# can't load, so space changes go through `window --focus` (macOS follows).
+
+# focus
+hyper - h : /opt/homebrew/bin/yabai -m window --focus west
+hyper - j : /opt/homebrew/bin/yabai -m window --focus south
+hyper - k : /opt/homebrew/bin/yabai -m window --focus north
+hyper - l : /opt/homebrew/bin/yabai -m window --focus east
+
+# swap
+hyper - left  : /opt/homebrew/bin/yabai -m window --swap west
+hyper - down  : /opt/homebrew/bin/yabai -m window --swap south
+hyper - up    : /opt/homebrew/bin/yabai -m window --swap north
+hyper - right : /opt/homebrew/bin/yabai -m window --swap east
+
+# move window to space N and follow it
+hyper - 1 : id=$(/opt/homebrew/bin/yabai -m query --windows --window | /opt/homebrew/bin/jq -re .id) && /opt/homebrew/bin/yabai -m window "$id" --space 1 && /opt/homebrew/bin/yabai -m window --focus "$id"
+hyper - 2 : id=$(/opt/homebrew/bin/yabai -m query --windows --window | /opt/homebrew/bin/jq -re .id) && /opt/homebrew/bin/yabai -m window "$id" --space 2 && /opt/homebrew/bin/yabai -m window --focus "$id"
+hyper - 3 : id=$(/opt/homebrew/bin/yabai -m query --windows --window | /opt/homebrew/bin/jq -re .id) && /opt/homebrew/bin/yabai -m window "$id" --space 3 && /opt/homebrew/bin/yabai -m window --focus "$id"
+hyper - 4 : id=$(/opt/homebrew/bin/yabai -m query --windows --window | /opt/homebrew/bin/jq -re .id) && /opt/homebrew/bin/yabai -m window "$id" --space 4 && /opt/homebrew/bin/yabai -m window --focus "$id"
+hyper - 5 : id=$(/opt/homebrew/bin/yabai -m query --windows --window | /opt/homebrew/bin/jq -re .id) && /opt/homebrew/bin/yabai -m window "$id" --space 5 && /opt/homebrew/bin/yabai -m window --focus "$id"
+
+# space 6 is usually a native-fullscreen app, which ⌥⌘1–5 can't reach
+alt + cmd - 6 : id=$(/opt/homebrew/bin/yabai -m query --windows --space 6 | /opt/homebrew/bin/jq -r 'first(.[] | select((."is-minimized" or ."is-sticky") | not) | .id) // empty') && [ -n "$id" ] && /opt/homebrew/bin/yabai -m window --focus "$id"
+
+# toggles
+hyper - f : /opt/homebrew/bin/yabai -m window --toggle float
+hyper - z : /opt/homebrew/bin/yabai -m window --toggle zoom-fullscreen
+hyper - s : /opt/homebrew/bin/yabai -m window --toggle split
