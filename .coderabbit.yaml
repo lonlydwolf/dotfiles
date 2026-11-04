@@ -1,0 +1,21 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+reviews:
+  profile: chill
+  poem: false
+  path_filters:
+    - "!**/*.age"
+  path_instructions:
+    - path: "ansible/**"
+      instructions: |
+        Focus on idempotency, check-mode behavior, privilege escalation,
+        and macOS compatibility. Package installation is intentionally
+        interactive through just install; Ansible reports package drift.
+    - path: "home/**"
+      instructions: |
+        These files use chezmoi source naming and template conventions.
+        Preserve executable, private, encrypted, and dot-file prefixes.
+        Review shell changes for macOS compatibility and safe quoting.
+    - path: "bootstrap.sh"
+      instructions: |
+        Check fresh-machine behavior, safe reruns, failure handling,
+        and the requirement to restore the age identity before bootstrap.
