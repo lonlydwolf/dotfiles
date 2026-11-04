@@ -54,6 +54,32 @@ reports brew drift and points you here (casks need a TTY to prompt for sudo).
 Freshness is by hand: `topgrade` for packages, `chezmoi apply
 --refresh-externals` for externals like nvim.
 
+## Hotkeys
+
+Caps Lock is a Hyper key (⌃⌥⇧⌘) through Hyperkey, skhd maps Hyper shortcuts
+to yabai (`~/.config/skhd/skhdrc`), Maccy keeps clipboard history, and
+Spotlight launches apps. These need one-time setup by hand after `just install`:
+
+1. **Coming from Raycast:** turn off Raycast's Hyper Key first (Raycast
+   Settings → Advanced → Hyper Key). It remaps Caps Lock to F20 with `hidutil`,
+   which would otherwise fight Hyperkey. Then quit and uninstall Raycast
+   (`brew uninstall --cask raycast`). If Caps Lock still acts odd, clear the
+   leftover mapping with `hidutil property --set '{"UserKeyMapping":[]}'` or
+   reboot.
+2. **Hyperkey:** set Caps Lock as the Hyper key, keep Shift included (skhd's
+   `hyper` is all four modifiers), turn on launch at login, and grant
+   Accessibility.
+3. **skhd:** `skhd --start-service`, allow it under System Settings → Privacy &
+   Security → Accessibility, then `skhd --restart-service`. `skhd --status`
+   checks it. yabai runs the same way (`yabai --start-service`).
+4. **Spotlight:** System Settings → Keyboard → Keyboard Shortcuts → Spotlight →
+   turn on "Show Spotlight search" (⌘Space).
+5. **Maccy:** Settings → General → Open → record Caps Lock+V (Hyper+V), turn on
+   launch at login, and grant Accessibility so it can paste.
+6. **Desktops:** System Settings → Keyboard → Keyboard Shortcuts → Mission
+   Control → set "Switch to Desktop 1"–"5" to ⌥⌘1–⌥⌘5 (not set by this repo).
+   skhd adds ⌥⌘6 for the space after them, usually a full-screen app.
+
 ## Secrets
 
 Small secrets live here age-encrypted (`encrypted_*.age`); the private key and
