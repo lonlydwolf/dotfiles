@@ -132,7 +132,7 @@ cask "visual-studio-code"  # Open-source code editor
 cask "google-drive" # Client for the Google Drive storage service
 cask "obsidian"   # Knowledge base that works on top of a local folder of plain text Markdown files
 cask "raindropio" # All-in-one bookmark manager
-cask "raycast"    # Control your tools with a few keystrokes
+cask "maccy"      # Lightweight clipboard manager
 cask "handy"      # Speech to text application
 cask "blip"       # Send any size file between devices
 
@@ -144,6 +144,8 @@ cask "protonvpn"   # VPN client focusing on security
 cask "balenaetcher"   # Tool to flash OS images to SD cards & USB drives
 cask "dockdoor"       # Window peeking utility app
 cask "hiddenbar"      # Utility to hide menu bar items
+cask "hyperkey"       # Turn Caps Lock into a Hyper key (cmd+opt+ctrl+shift)
+cask "jackielii/tap/skhd-zig" # Hotkey daemon driving the yabai bindings
 cask "stats"          # System monitor for the menu bar
 cask "the-unarchiver" # Unpacks archive files
 
