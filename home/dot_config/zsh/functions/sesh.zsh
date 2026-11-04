@@ -10,5 +10,5 @@ function s() {
     return 1
   fi
 
-  sesh picker --icons --hide-duplicates --hide-attached "$@"
+  sesh picker --icons --hide-duplicates "$@"
 }
