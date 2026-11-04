@@ -70,8 +70,13 @@ Spotlight launches apps. These need one-time setup by hand after `just install`:
    `hyper` is all four modifiers), turn on launch at login, and grant
    Accessibility.
 3. **skhd:** `skhd --start-service`, allow it under System Settings → Privacy &
-   Security → Accessibility, then `skhd --restart-service`. `skhd --status`
-   checks it. yabai runs the same way (`yabai --start-service`).
+   Security → Accessibility, then `just hotkeys`. `skhd --status` checks it.
+   yabai runs the same way (`yabai --start-service`).
+   Hyperkey has to be started after skhd: whichever starts last sees keys
+   first, and skhd only matches Hyper once Hyperkey has added it. `just
+   hotkeys` restarts skhd and then Hyperkey; run it again whenever skhd
+   restarts on its own (e.g. a `brew upgrade` of skhd-zig) and Hyper hotkeys
+   stop working.
 4. **Spotlight:** System Settings → Keyboard → Keyboard Shortcuts → Spotlight →
    turn on "Show Spotlight search" (⌘Space).
 5. **Maccy:** Settings → General → Open → record Caps Lock+V (Hyper+V), turn on

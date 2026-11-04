@@ -55,3 +55,17 @@ prune force="":
     else
         ansible-playbook {{playbook}} --tags prune
     fi
+
+# restart skhd, then Hyperkey (Hyperkey must start last for Hyper hotkeys to reach skhd)
+hotkeys:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    skhd --restart-service
+    for _ in {1..20}; do
+        skhd --status 2>&1 | grep -q 'event tap active' && break
+        sleep 0.5
+    done
+    skhd --status 2>&1 | grep -q 'event tap active' || { echo "skhd's event tap never came up; see skhd --status" >&2; exit 1; }
+    osascript -e 'quit app "Hyperkey"'
+    while pgrep -xq Hyperkey; do sleep 0.2; done
+    open -a Hyperkey
