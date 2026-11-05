@@ -13,10 +13,6 @@ key = "~/.ssh/github_ed25519.pub"
 program = "/usr/bin/ssh-keygen"
 allowed-signers = "~/.config/git/allowed_signers"
 
-[git]
-# Sign at commit creation rather than deferring signing until a push.
-sign-on-push = false
-
 [ui]
 default-command = "log"
 pager = "delta"
