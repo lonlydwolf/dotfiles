@@ -16,3 +16,34 @@ allowed-signers = "~/.config/git/allowed_signers"
 [ui]
 default-command = "log"
 pager = "delta"
+
+[aliases]
+# Draft a description for a change with the jj-commit-message skill, then open
+# it in the editor. Needs the skill installed for Claude Code.
+# Usage: jj msg [-r REVISION] [why I made the change]
+msg = ["util", "exec", "--", "bash", "-c", '''
+set -euo pipefail
+rev="@"
+if [ "${1:-}" = "-r" ]; then rev="${2:?missing revision}"; shift 2; fi
+id="$(jj log --no-graph -r "$rev" -T 'change_id ++ "\n"')"
+case "$id" in
+  "") echo "jj msg: $rev matches no change" >&2; exit 1 ;;
+  *$'\n'*) echo "jj msg: $rev matches more than one change; name exactly one" >&2; exit 1 ;;
+esac
+id="change_id($id)"
+[ "$(jj log --no-graph -r "$id" -T '"x"')" = x ] || { echo "jj msg: change $rev is divergent or hidden" >&2; exit 1; }
+diff="$(jj diff -r "$id" --git)"
+[ -n "$diff" ] || { echo "jj msg: change $rev has no diff to describe" >&2; exit 1; }
+draft="$({
+  echo "Recent titles in this repository:"
+  jj log --no-graph -r "ancestors($id, 12) ~ ($id)" -T 'description.first_line() ++ "\n"'
+  echo
+  echo "The description the change has now (my notes, if any):"
+  jj log --no-graph -r "$id" -T description
+  echo
+  echo "The diff:"
+  printf '%s\n' "$diff"
+} | claude -p --tools "" --no-session-persistence "/jj-commit-message I wrote this change myself. The diff is on standard input. Why I made the change: ${*:-not given}")"
+[ -n "$draft" ] || { echo "jj msg: no draft came back" >&2; exit 1; }
+printf '%s\n' "$draft" | jj describe -r "$id" --stdin --editor
+''', ""]
