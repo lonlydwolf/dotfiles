@@ -10,7 +10,7 @@ default:
 # preview dotfile changes
 diff:
     chezmoi status
-    chezmoi diff
+    chezmoi diff --exclude=encrypted
 
 # apply dotfiles (diff first)
 apply: diff
