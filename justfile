@@ -156,17 +156,23 @@ audit:
 prune force="false":
     #!/usr/bin/env bash
     set -euo pipefail
+
     if [[ "{{force}}" == "true" ]]; then
-        just _prune_force
+        if ! read -r -p "Type 'prune' to confirm destructive cleanup: " answer </dev/tty; then
+            echo "An interactive terminal is required." >&2
+            exit 1
+        fi
+
+        if [[ "$answer" != "prune" ]]; then
+            echo "Cleanup cancelled."
+            exit 1
+        fi
+
+        brew bundle cleanup --file={{brewfile}} --force
+        brew cleanup --prune=all
     else
         ansible-playbook {{playbook}} --tags prune
     fi
-
-# Destructive cleanup — requires interactive confirmation.
-[confirm("Uninstall undeclared packages and purge Homebrew caches?")]
-_prune_force:
-    brew bundle cleanup --file={{brewfile}} --force
-    brew cleanup --prune=all
 
 # restart skhd, then Hyperkey (Hyperkey must start last for Hyper hotkeys to reach skhd)
 hotkeys:
