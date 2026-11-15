@@ -115,7 +115,20 @@ disable = [
 # Commands to run after anything
 [post_commands]
 # "Emacs Snapshot" = "rm -rf ~/.emacs.d/elpa.bak && cp -rl ~/.emacs.d/elpa ~/.emacs.d/elpa.bak"
+"Sync Yazi plugin revisions" = '''
+target="$HOME/.config/yazi/package.toml"
+src="$(chezmoi source-path "$target")" || exit 1
 
+if [ ! -f "$target" ] || [ ! -f "$src" ]; then
+    echo "Yazi: lockfile missing; sync failed" >&2
+    exit 1
+elif cmp -s "$src" "$target"; then
+    echo "Yazi: no changes to re-add"
+else
+    chezmoi re-add "$target" || exit 1
+    echo "Yazi: plugin revisions re-added to chezmoi"
+fi
+'''
 
 # Custom commands
 [commands]
