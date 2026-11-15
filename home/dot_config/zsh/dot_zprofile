@@ -4,3 +4,30 @@
 if (( $+commands[mise] )); then
   eval "$(mise activate zsh --shims)"
 fi
+
+
+# Load the GitHub SSH signing key into an existing SSH agent.
+# Supported: macOS (Keychain) and Linux (OpenSSH).
+
+if [[ -o interactive && -S "${SSH_AUTH_SOCK:-}" ]]; then
+    _ssh_key="$HOME/.ssh/github_ed25519"
+
+    if [[ -r "$_ssh_key" && -r "${_ssh_key}.pub" ]]; then
+        case "$OSTYPE" in
+            darwin*)
+                if ! /usr/bin/ssh-add -T "${_ssh_key}.pub" &>/dev/null; then
+                    /usr/bin/ssh-add --apple-load-keychain >/dev/null
+                fi
+                ;;
+
+            linux*)
+                if command -v ssh-add &>/dev/null &&
+                   ! ssh-add -T "${_ssh_key}.pub" &>/dev/null; then
+                    ssh-add "$_ssh_key" >/dev/null
+                fi
+                ;;
+        esac
+    fi
+
+    unset _ssh_key
+fi
