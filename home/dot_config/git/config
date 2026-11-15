@@ -13,3 +13,7 @@
 [gpg "ssh"]
 	program = /usr/bin/ssh-keygen
 	allowedSignersFile = ~/.config/git/allowed_signers
+
+# Clone and fetch over HTTPS (works before the SSH key is restored), push over SSH.
+[url "git@github.com:lonlydwolf/"]
+	pushInsteadOf = https://github.com/lonlydwolf/
