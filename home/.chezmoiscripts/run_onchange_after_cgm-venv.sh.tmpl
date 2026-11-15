@@ -1,15 +1,25 @@
 #!/bin/sh
-# .venv has machine-specific paths, so it is regenerated rather than committed.
+# CGM environment managed using project-specific mise configuration.
+# mise.toml hash: {{ include "dot_config/cgm/mise.toml" | sha256sum }}
 # requirements.txt hash: {{ include "dot_config/cgm/requirements.txt" | sha256sum }}
 set -eu
 
 dir="$HOME/.config/cgm"
-if [ -x /opt/homebrew/bin/python3 ]; then
-  python=/opt/homebrew/bin/python3
-else
-  python="$(command -v python3)"
-fi
+venv="$dir/.venv"
 
-"$python" -m venv "$dir/.venv"
-"$dir/.venv/bin/pip" install --quiet --upgrade pip
-"$dir/.venv/bin/pip" install --quiet -r "$dir/requirements.txt"
+# Install the Python version declared by CGM's mise.toml.
+mise -C "$dir" install
+
+# Create the virtual environment with that interpreter.
+mise -C "$dir" exec -- \
+    python -m venv --clear "$venv"
+
+# Install pinned dependencies.
+"$venv/bin/python" -m pip install \
+    --no-input \
+    --disable-pip-version-check \
+    -r "$dir/requirements.txt"
+
+# Validate imports.
+"$venv/bin/python" -c \
+    'import pydantic, requests; from libre_link_up import LibreLinkUpClient'
