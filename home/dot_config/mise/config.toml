@@ -13,7 +13,8 @@ python = "latest" # needed by every pipx: tool
 go = "latest"     # needed by every go: tool
 rust = "latest"   # if you let mise own Rust instead of rustup
 
-# Pi
+# AI coding agents
+agy = "latest"
 "npm:@earendil-works/pi-coding-agent" = "latest"
 
 # Lua
