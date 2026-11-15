@@ -9,6 +9,7 @@ default:
 
 # preview dotfile changes
 diff:
+    chezmoi status
     chezmoi diff
 
 # apply dotfiles (diff first)

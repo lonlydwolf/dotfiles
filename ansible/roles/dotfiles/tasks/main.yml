@@ -4,18 +4,17 @@
   ansible.builtin.command: "chezmoi init --source {{ ansible_facts['env']['HOME'] }}/dotfiles"
   changed_when: false
 
-- name: Audit — dotfiles drift (chezmoi diff)
-  ansible.builtin.command: chezmoi diff
-  register: chezmoi_diff
+- name: Audit — dotfiles drift (chezmoi status)
+  ansible.builtin.command: chezmoi status
+  register: chezmoi_status
   changed_when: false
-  failed_when: false
   check_mode: false
 
 - name: Show dotfiles drift
   ansible.builtin.debug:
-    msg: "{{ chezmoi_diff.stdout_lines | default(['(dotfiles in sync)'], true) }}"
+    msg: "{{ chezmoi_status.stdout_lines | default(['(dotfiles in sync)'], true) }}"
 
 - name: Converge — apply dotfiles
   ansible.builtin.command: chezmoi apply
-  when: chezmoi_diff.stdout | length > 0
+  when: chezmoi_status.stdout | trim | length > 0
   changed_when: true
