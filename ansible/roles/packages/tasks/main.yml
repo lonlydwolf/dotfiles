@@ -10,10 +10,16 @@
       check_mode: false
     - name: Show brew audit
       ansible.builtin.debug:
-        msg: "{{ brew_audit.stdout_lines | default([], true) }}"
-    - name: Report — how to converge brew drift
+        msg:
+          rc: "{{ brew_audit.rc }}"
+          stdout: "{{ brew_audit.stdout_lines | default([], true) }}"
+          stderr: "{{ brew_audit.stderr_lines | default([], true) }}"
+    - name: Report — Brewfile requires attention
       ansible.builtin.debug:
-        msg: "Brewfile drift detected — run `just install` to converge (interactive; casks may prompt for your password)."
+        msg: >-
+          Brewfile check returned rc={{ brew_audit.rc }}.
+          Review the audit output above. If dependencies are missing,
+          run `just install` to converge.
       when: brew_audit.rc != 0
 
 - name: Arch packages (pacman) — stub
