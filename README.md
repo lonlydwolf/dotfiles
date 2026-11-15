@@ -7,8 +7,9 @@ dotfiles, brew + mise install packages. `stow-archive` holds the pre-chezmoi his
 
 ## Rebuild
 
-**1. Restore the age identity first** (from offline backup — bootstrap refuses
-to run without it):
+**1. Restore the age identity first** (from offline backup — recommended, not
+required: bootstrap checks it before the slow installs and, if it is missing or
+wrong, lets you check again, continue without secrets, or quit):
 
 ```sh
 mkdir -p ~/.config/chezmoi
@@ -23,7 +24,15 @@ converges the system into a working machine:
 curl -fsSL https://raw.githubusercontent.com/lonlydwolf/dotfiles/main/bootstrap.sh | sh
 ```
 
-**3. Install the full set** — sign into the App Store first (for the `mas`
+It clones over HTTPS, so no SSH key is needed yet, and ends with `just doctor`
+plus the steps still left to do by hand. If you skipped the age key, restore it
+later and run `just apply` to bring the secrets back.
+
+**3. Restore the SSH key** — after bootstrap, once `~/.ssh/config` is in place:
+copy `~/.ssh/github_ed25519` and its `.pub` from backup, `chmod 600` the private
+key, and load it (see [Commit signing](#commit-signing)). Pushes go over SSH.
+
+**4. Install the full set** — sign into the App Store first (for the `mas`
 apps), then run the interactive install. This step is interactive because casks
 like docker/zoom prompt for your password, which Ansible's non-TTY run can't do:
 
@@ -31,7 +40,7 @@ like docker/zoom prompt for your password, which Ansible's non-TTY run can't do:
 just install
 ```
 
-**4. Log out and back in** — the keyboard settings need a full logout.
+**5. Log out and back in** — the keyboard settings need a full logout.
 
 If a download fails mid-run, just re-run — bootstrap and `just install` both
 pick up where they left off. Afterwards, re-authenticate the tools that never
@@ -47,6 +56,7 @@ just sync      # converge system state; report package drift
 just check     # whole-system dry-run
 just audit     # what's installed but undeclared
 just prune     # list undeclared; `just prune -f` removes (interactive)
+just doctor    # keys, hotkeys, shortcuts, unpushed work (read-only)
 ```
 
 Package installs (brew) run interactively via `just install`; Ansible only
@@ -87,9 +97,11 @@ Spotlight launches apps. These need one-time setup by hand after `just install`:
 
 ## Secrets
 
-Small secrets live here age-encrypted (`encrypted_*.age`); the private key and
-SSH/GPG stay on offline backup and are restored by hand (step 1); everything
-else is re-authenticated on rebuild — nothing sensitive is ever committed.
+Small secrets live here age-encrypted (`encrypted_*.age`); the age key and the
+SSH key stay on offline backup and are restored by hand (steps 1 and 3);
+everything else is re-authenticated on rebuild — nothing sensitive is ever
+committed. Without the age key, chezmoi skips the encrypted files listed in
+`home/.chezmoiignore`, so add any new one there too.
 
 ## Commit signing
 
