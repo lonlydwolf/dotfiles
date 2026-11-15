@@ -92,9 +92,9 @@ brew "yt-dlp"      # Feature-rich command-line audio/video downloader
 brew "media-control" # Control and observe media playback from the command-line
 
 # --- Purpose: Productivity ---
-brew "asmvik/formulae/yabai"    # A tiling window manager for macOS based on binary space partitioning.
-brew "felixkratz/formulae/borders"      # A window border system for macOS
-brew "felixkratz/formulae/sketchybar"   # Custom macOS statusbar with shell plugin, interaction and graph support
+brew "asmvik/formulae/yabai", trusted: true    # A tiling window manager for macOS based on binary space partitioning.
+brew "felixkratz/formulae/borders", trusted: true      # A window border system for macOS
+brew "felixkratz/formulae/sketchybar", trusted: true   # Custom macOS statusbar with shell plugin, interaction and graph support
 
 # ============================================================
 # CASK
@@ -145,7 +145,7 @@ cask "balenaetcher"   # Tool to flash OS images to SD cards & USB drives
 cask "dockdoor"       # Window peeking utility app
 cask "hiddenbar"      # Utility to hide menu bar items
 cask "hyperkey"       # Turn Caps Lock into a Hyper key (cmd+opt+ctrl+shift)
-cask "jackielii/tap/skhd-zig" # Hotkey daemon driving the yabai bindings
+cask "jackielii/tap/skhd-zig", trusted: true # Hotkey daemon driving the yabai bindings
 cask "stats"          # System monitor for the menu bar
 cask "the-unarchiver" # Unpacks archive files
 
