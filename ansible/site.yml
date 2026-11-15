@@ -6,6 +6,9 @@
   # exist before the dotfiles role on a cold machine
   environment:
     MISE_GLOBAL_CONFIG_FILE: "{{ playbook_dir }}/../home/dot_config/mise/config.toml"
+    CARGO_HOME: "{{ lookup('ansible.builtin.env', 'HOME') }}/.local/share/cargo"
+    RUSTUP_HOME: "{{ lookup('ansible.builtin.env', 'HOME') }}/.local/share/rustup"
+
   roles:
     - role: packages
       tags: [packages]

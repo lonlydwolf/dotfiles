@@ -2,6 +2,10 @@
 # GLOBAL toolchain — editor/language tooling available in every directory.
 # Cross-platform: these same lines work on macOS and Arch.
 
+[settings.rust]
+cargo_home = "~/.local/share/cargo"
+rustup_home = "~/.local/share/rustup"
+
 [tools]
 # --- Language runtimes (backends below depend on these) ---
 node = "latest"   # needed by every npm: tool
