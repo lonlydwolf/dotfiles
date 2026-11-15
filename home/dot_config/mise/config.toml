@@ -13,6 +13,9 @@ python = "latest" # needed by every pipx: tool
 go = "latest"     # needed by every go: tool
 rust = "latest"   # if you let mise own Rust instead of rustup
 
+# Pi
+"npm:@earendil-works/pi-coding-agent" = "latest"
+
 # Lua
 "aqua:LuaLS/lua-language-server" = "latest"
 "cargo:stylua" = "latest"
