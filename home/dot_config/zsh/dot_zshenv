@@ -24,6 +24,10 @@ fi
 
 export DATALAB_PROCESSING_LOCATION='eu'
 
+# ---------- Antigravity CLI ----------
+# Antigravity CLI updates are owned by mise.
+export AGY_CLI_DISABLE_AUTO_UPDATE=true
+
 # ---------- PATH ----------
 # Personal binaries/scripts
 export PATH="$HOME/.local/bin:$PATH"
