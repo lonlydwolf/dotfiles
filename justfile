@@ -46,15 +46,21 @@ audit:
     just prune
 
 # cleanup — report only; `just prune -f` uninstalls + purges caches (interactive)
-prune force="":
+[arg("force", long="force", short="f", value="true")]
+prune force="false":
     #!/usr/bin/env bash
     set -euo pipefail
-    if [ -n "{{force}}" ]; then
-        brew bundle cleanup --file={{brewfile}} --force
-        brew cleanup --prune=all
+    if [[ "{{force}}" == "true" ]]; then
+        just _prune_force
     else
         ansible-playbook {{playbook}} --tags prune
     fi
+
+# Destructive cleanup — requires interactive confirmation.
+[confirm("Uninstall undeclared packages and purge Homebrew caches?")]
+_prune_force:
+    brew bundle cleanup --file={{brewfile}} --force
+    brew cleanup --prune=all
 
 # restart skhd, then Hyperkey (Hyperkey must start last for Hyper hotkeys to reach skhd)
 hotkeys:
