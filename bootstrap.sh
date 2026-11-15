@@ -128,7 +128,22 @@ main() {
     ansible-galaxy collection install -r ansible/requirements.yml  # cold core lacks community.general
     ansible-playbook ansible/site.yml
 
-    echo "Core ready. Run 'just install' for the full set (casks + mas — sign into the App Store first)."
+    if [ "$os" = Darwin ]; then
+        printf '\nWhat is still open (just doctor):\n'
+        just doctor || true  # reports, never fails the bootstrap
+    fi
+
+    printf '\nCore ready. Left to do by hand:\n'
+    [ -e "$IDENTITY" ] ||
+        echo "  - restore the age key to $IDENTITY (chmod 600), then 'just apply' for the secrets"
+    cat <<'EOF'
+  - restore ~/.ssh/github_ed25519 and .pub from backup (chmod 600), then
+    /usr/bin/ssh-add --apple-use-keychain ~/.ssh/github_ed25519
+  - sign into the App Store, then 'just install' for the full set
+  - hotkey setup from the README (Accessibility, Hyperkey, Maccy, 'just hotkeys')
+  - log out and back in
+Run 'just doctor' any time to see what is still open.
+EOF
 }
 
 main "$@"
