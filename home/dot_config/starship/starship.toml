@@ -1,157 +1,178 @@
 # ==============================================================================
-# Global Layout Adjustments
+# Starship
 # ==============================================================================
+# In zsh, Starship supplies the pieces of the prompt and ~/.config/zsh/prompt.zsh
+# lays them out. That file asks for one of the two profiles below once per
+# prompt and splits the answer on U+001F:
+#
+#   repository state · path · language · OS · user · host
+#
+# Identity is reported unstyled because prompt.zsh decides how loud it is.
+# `format` is what any other shell gets from `starship init`.
+
+"$schema" = "https://starship.rs/config-schema.json"
 command_timeout = 500
-palette = "default"
-continuation_prompt = "[▶▶ ](fg:#585b70)"
-# add_newline = false
+palette = "mocha"
+continuation_prompt = "[▶▶ ](fg:surface2)"
 
-# Combined two-line layout with structured connecting lines
-format = """
-[╭─](fg:surface1)\
-$os\
-$username\
-$hostname\
-[\uE0B4](fg:surface1)\
-[─](fg:surface1)\
-$directory\
-[─](fg:surface1)\
-$status\
-$cmd_duration\
-$fill\
-${custom.git}\
-${custom.jj_native}\
-$line_break\
-[╰─](fg:surface1)\
-$character"""
+format = "($vcs  )$directory$line_break$character"
+right_format = ""
 
-right_format = """"""
+[profiles]
+block = "$vcs\u001f$directory\u001f\u001f$os\u001f$username\u001f$hostname"
+block_lang = "$vcs\u001f$directory\u001f$golang$python$rust$nodejs$c$cpp\u001f$os\u001f$username\u001f$hostname"
 
 # ==============================================================================
 # Color Palette (Catppuccin Mocha)
 # ==============================================================================
-[palettes.default]
+# prompt.zsh carries the same values for the parts it draws itself.
+[palettes.mocha]
 text = "#cdd6f4"
-crust = "#11111b"
-surface0 = "#313244" # Dark pill chambers
-surface1 = "#45475a" # Light pill chambers & frame lines
-green = "#a6e3a1"    # Insert Mode / Success
-blue = "#89b4fa"     # Normal Mode / OS & Directory Icon
-mauve = "#cba6f7"    # Visual Mode / Git & Hostname
-red = "#f38ba8"      # Replace Mode / Errors / Root
-
-teal = "#94e2d5"     # Git Ahead/Behind sync status (Blue-Green)
-sapphire = "#74c7ec" # Deep blue for Git branch icon
-peach = "#fab387"    # Git Dirty/Modified status warning
+overlay1 = "#7f849c"
+surface2 = "#585b70"
+mauve = "#cba6f7"
+green = "#a6e3a1"
+peach = "#fab387"
+red = "#f38ba8"
+yellow = "#f9e2af"
+blue = "#89b4fa"
+teal = "#94e2d5"
+sapphire = "#74c7ec"
 
 # ==============================================================================
-# Left Prompt Segments (Pill 1: OS, User, Host)
+# Repository State
+# ==============================================================================
+# jj wins wherever a repository is both. Every item brings its own leading
+# space, so nothing is left behind when an item is absent.
+
+[vcs]
+order = ["jj", "git"]
+jj_modules = "$jj_change$jj_status$jj_metrics"
+git_modules = "$git_branch$git_commit$git_state$git_status"
+
+[jj_change]
+format = "$change"
+change_hash_length = 4
+prefix_style = "bold fg:mauve"
+suffix_style = "fg:overlay1"
+
+# prompt.zsh reads "conflict", "immutable" and the file counts from this text
+# to pick the node drawn in front of the change id.
+[jj_status]
+format = "($modified$added$deleted$renamed$copied)($conflicted)($immutable)($description)"
+modified = "[ M$count](fg:peach)"
+added = "[ A$count](fg:green)"
+deleted = "[ D$count](fg:red)"
+renamed = "[ R$count](fg:blue)"
+copied = "[ C$count](fg:blue)"
+conflicted = "[ conflict](fg:red)"
+immutable = "[ immutable](fg:sapphire)"
+description_empty = "[ ◌](fg:yellow)"
+description_present = ""
+
+[jj_metrics]
+format = "([ +$added]($added_style))([ −$deleted]($deleted_style))"
+added_style = "fg:green"
+deleted_style = "fg:red"
+
+[git_branch]
+format = "[*](fg:peach) [$branch](fg:mauve)"
+truncation_length = 24
+truncation_symbol = "…"
+
+[git_commit]
+format = "[ $hash$tag](fg:overlay1)"
+
+[git_state]
+format = "[ $state( $progress_current/$progress_total)](fg:red)"
+
+[git_status]
+format = "($ahead_behind$conflicted$modified$staged$deleted$renamed$untracked)"
+ahead = "[ ↑$count](fg:teal)"
+behind = "[ ↓$count](fg:teal)"
+diverged = "[ ↑$ahead_count↓$behind_count](fg:peach)"
+conflicted = "[ conflict](fg:red)"
+modified = "[ M$count](fg:peach)"
+staged = "[ A$count](fg:green)"
+deleted = "[ D$count](fg:red)"
+renamed = "[ R$count](fg:blue)"
+untracked = "[ ?$count](fg:overlay1)"
+stashed = ""
+
+# ==============================================================================
+# Path
+# ==============================================================================
+
+[directory]
+format = "[$path]($style)[$read_only]($read_only_style)"
+repo_root_format = "[$repo_root]($repo_root_style)[$path]($style)[$read_only]($read_only_style)"
+style = "fg:text"
+repo_root_style = "bold fg:text"
+truncation_length = 4
+truncation_symbol = "…/"
+read_only = " ro"
+read_only_style = "fg:red"
+
+# ==============================================================================
+# Language
+# ==============================================================================
+# Starship shows each of these only where the current directory holds that
+# language. They are asked for through `block_lang` alone, so their version
+# commands do not run on every prompt.
+
+[golang]
+format = "[go $version ](fg:overlay1)"
+version_format = "${major}.${minor}"
+
+[python]
+format = "[py $version( $virtualenv) ](fg:overlay1)"
+version_format = "${major}.${minor}"
+
+[rust]
+format = "[rust $version ](fg:overlay1)"
+version_format = "${major}.${minor}"
+
+[nodejs]
+format = "[node $version ](fg:overlay1)"
+version_format = "${major}"
+
+[c]
+format = "[$name $version ](fg:overlay1)"
+version_format = "${major}"
+
+[cpp]
+disabled = false
+format = "[$name $version ](fg:overlay1)"
+version_format = "${major}"
+
+# ==============================================================================
+# Identity
 # ==============================================================================
 
 [os]
 disabled = false
-style = "bg:surface0 fg:white"
-format = "[\uE0B6](fg:surface0)[ $symbol ]($style)"
+format = "$symbol"
 
 [os.symbols]
-Macos = "\uE711"
+Macos = ""
 Arch = "\U000F08C7"   # 5-digit hex codes require uppercase \\U padding
 Ubuntu = "\U000F0548" # 5-digit hex codes require uppercase \\U padding
-Fedora = "\uE7D9"
+Fedora = ""
 
 [username]
 show_always = true
-style_user = "bg:surface1 fg:text"
-style_root = "bg:surface1 fg:red"
-format = "[\uE0B4](bg:surface1 fg:surface0)[ $user ]($style)"
+format = "$user"
 
 [hostname]
-ssh_only = true
-style = "bg:surface1 fg:mauve"
-format = "[\uE0B4](fg:surface0 bg:surface1)[@$hostname ]($style)"
+ssh_only = false
+format = "$hostname"
 
 # ==============================================================================
-# Left Prompt Segments (Pill 2 & Pill 3)
+# Caret
 # ==============================================================================
-
-[directory]
-style = "bg:surface1 fg:text"
-format = "[\uE0B6](fg:surface0)[ \uF07B ](bg:surface0 fg:blue)[\uE0B4](bg:surface1 fg:surface0)[ $path ]($style)[\uE0B4](fg:surface1)"
-truncation_length = 1
-fish_style_pwd_dir_length = 1
-
-[status]
-disabled = false
-success_symbol = "[\uF00C](bg:surface0 fg:green)"
-symbol = "[\uF00D](bg:surface0 fg:red)"
-format = "[\uE0B6](fg:surface0)$symbol"
-
-[cmd_duration]
-min_time = 0
-show_milliseconds = true
-style = "bg:surface1 fg:text"
-format = "[\uE0B4](bg:surface1 fg:surface0)[ $duration ]($style)[\uE0B4](fg:surface1)"
-
-# ==============================================================================
-# Structural Fill
-# ==============================================================================
-
-[fill]
-symbol = "─"
-style = "fg:surface1"
-
-# ==============================================================================
-# Theme-Matched Character Input (Line 2)
-# ==============================================================================
+# Only for shells without prompt.zsh, which draws its own.
 
 [character]
-disabled = false
-success_symbol = "[❯ ](bold fg:#a6e3a1)"            # Insert Mode (Success)
-error_symbol = "[❯ ](bold fg:#f38ba8)"              # Insert Mode (Error)
-vimcmd_symbol = "[❮ ](bold fg:#89b4fa)"             # Normal Mode
-vimcmd_visual_symbol = "[𝝠 ](bold fg:#cba6f7)"      # Visual Mode
-vimcmd_replace_symbol = "[𝝮 ](bold fg:#f9e2af)"     # Replace Mode (Yellow)
-vimcmd_replace_one_symbol = "[𝝮 ](bold fg:#eba0ac)" # Replace One Mode (Maroon)
-
-# ==============================================================================
-# Version Control Segments (Right Aligned)
-# ==============================================================================
-
-[custom.git]
-command = "starship module git_branch && starship module git_state && starship module git_status"
-when = "git rev-parse --is-inside-work-tree >/dev/null 2>&1 && ! jj root >/dev/null 2>&1"
-format = "$output[\uE0B4](fg:surface1)"
-
-[git_branch]
-style = "bg:surface1 fg:text"
-format = "[\uE0B6](fg:surface0)[  ](bg:surface0 fg:sapphire)[\uE0B4](bg:surface1 fg:surface0)[ $branch ]($style)"
-truncation_length = 24
-truncation_symbol = "…"
-
-[git_status]
-style = "bg:surface1 fg:text"
-format = "[ $all_status$ahead_behind]($style)"
-ahead = "[ ](bg:surface1 fg:teal)"
-behind = "[ ](bg:surface1 fg:teal)"
-diverged = "[󰹹 ](bg:surface1 fg:peach)"
-conflicted = "[ ](bg:surface1 fg:red)"
-untracked = "[ ](bg:surface1 fg:mauve)"
-stashed = "[ ](bg:surface1 fg:blue)"
-modified = "[󰏫 ](bg:surface1 fg:peach)"
-staged = "[ ](bg:surface1 fg:green)"
-renamed = "[󰕕 ](bg:surface1 fg:blue)"
-deleted = "[ ](bg:surface1 fg:red)"
-
-[git_state]
-style = "bg:surface1 fg:red bold"
-format = "[ $state( $progress_current/$progress_total)]($style)"
-
-[git_metrics]
-disabled = true
-
-[custom.jj_native]
-disabled = false
-detect_folders = [".jj"]
-command = "starship-jj"
-style = "bg:surface1 fg:text"
-format = "[\uE0B6](fg:surface0)[ \ue702 ](bg:surface0 fg:mauve)[\uE0B4](bg:surface1 fg:surface0)[ $output ]($style)[\uE0B4](fg:surface1)"
+success_symbol = "[❯](fg:green)"
+error_symbol = "[❯](fg:red)"
+vimcmd_symbol = "[❮](fg:blue)"
