@@ -1,3 +1,0 @@
----
-# starship-jj crate source (chezmoi-tracked); the build role cargo-installs it to ~/.local
-starship_jj_src: "{{ lookup('env', 'HOME') }}/dotfiles/home/dot_config/starship/starship-jj"

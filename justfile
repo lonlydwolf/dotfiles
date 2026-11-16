@@ -187,11 +187,3 @@ hotkeys:
     osascript -e 'quit app "Hyperkey"'
     while pgrep -xq Hyperkey; do sleep 0.2; done
     open -a Hyperkey
-
-# Rebuild starship-jj after modifying its Rust source
-build-starship-jj:
-    mise exec -- cargo install \
-        --path home/dot_config/starship/starship-jj \
-        --root "$HOME/.local"
-
-
