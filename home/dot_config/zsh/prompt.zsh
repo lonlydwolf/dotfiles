@@ -297,6 +297,7 @@ _tip_build() {
 
     _tip_gather $lang
     _tip_layout
+    trap '_tip_interrupt; return 130' INT
 }
 precmd_functions+=(_tip_build)
 
@@ -306,11 +307,22 @@ precmd_functions+=(_tip_build)
 
 # On Enter the whole block, the outcome line included, shrinks to "› ".
 _tip_collapse() {
+    trap - INT
     PROMPT="%F{$_tip_c[dim]}›%f "
     zle .reset-prompt
 }
 autoload -Uz add-zle-hook-widget
 add-zle-hook-widget zle-line-finish _tip_collapse
+
+# Ctrl-C on a half-typed line does not finish it, so it is collapsed here.
+# The trap is set by _tip_build and dropped by _tip_collapse, so it exists
+# only while a line is being edited. Left in place it would also run when
+# Ctrl-C interrupts a command, and its `return` would end only the innermost
+# function and let the rest of the command carry on.
+_tip_interrupt() {
+    zle && _tip_collapse
+    return 0
+}
 
 TRAPWINCH() {
     zle || return 0
