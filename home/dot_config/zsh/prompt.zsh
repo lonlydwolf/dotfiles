@@ -22,6 +22,8 @@
 #   lang      arrival | detected  language: on entering a project, or wherever detected
 #   outcome   live | keep         failures and long runs: until the next Enter, or kept
 #
+# `tip lang detected` and the like change one for the current shell, `tip`
+# alone lists them, and `tip cost [n]` times the parts of the prompt.
 # The defaults:
 
 typeset -gA _tip_opt=(identity always lang arrival outcome live)
@@ -37,6 +39,7 @@ fi
 # Starship's init records the status and run time of each command and redraws
 # the prompt when the vi mode changes. Its own PROMPT is replaced below.
 eval "$(starship init zsh)"
+zmodload zsh/datetime
 setopt promptsubst
 RPROMPT=''
 
@@ -55,6 +58,7 @@ typeset -g _tip_parent='' _tip_desc='' _tip_node='' _tip_node_short=''
 typeset -g _tip_lang='' _tip_who='' _tip_out='' _tip_block=''
 typeset -g _tip_ins='' _tip_cmd='' _tip_root='' _tip_kind='' _tip_key=$'\x01'
 typeset -gi _tip_loud=0
+typeset -gF _tip_ms=0
 
 # The caret is chosen by zsh as it draws, from the keymap in force.
 typeset -g _TIP_PROMPT='${_tip_block}${${${KEYMAP:-viins}:#vicmd}:+$_tip_ins}${${(M)KEYMAP:#vicmd}:+$_tip_cmd} '
@@ -252,6 +256,7 @@ _tip_layout() {
 
 # Runs before every prompt.
 _tip_build() {
+    local -F t0=$EPOCHREALTIME
     local REPLY note='' sig='' key
     local -i ms=${STARSHIP_DURATION:--1} st=${STARSHIP_CMD_STATUS:-0} lang=0
 
@@ -298,6 +303,7 @@ _tip_build() {
     _tip_gather $lang
     _tip_layout
     trap '_tip_interrupt; return 130' INT
+    (( _tip_ms = (EPOCHREALTIME - t0) * 1000 ))
 }
 precmd_functions+=(_tip_build)
 
@@ -328,4 +334,65 @@ TRAPWINCH() {
     zle || return 0
     _tip_layout
     zle .reset-prompt
+}
+
+# --------------------------------------------------
+# tip: settings and timing
+# --------------------------------------------------
+
+# Median of the given microsecond samples, in milliseconds → REPLY
+_tip_median() {
+    local -a sorted=(${(on)@})
+    REPLY=$(( sorted[($# + 1) / 2] / 1000.0 ))
+}
+
+# Time each part of the prompt over $1 rebuilds, to find what a change cost.
+_tip_cost() {
+    local -a star lang jj whole
+    local -F t
+    local -i n=${1:-10} i us
+    local REPLY out
+    (( n > 0 )) || n=10
+    _tip_project
+    for i in {1..$n}; do
+        t=$EPOCHREALTIME; out=$(starship prompt --profile block 2>/dev/null)
+        (( us = (EPOCHREALTIME - t) * 1000000 )); star+=($us)
+        t=$EPOCHREALTIME; out=$(starship prompt --profile block_lang 2>/dev/null)
+        (( us = (EPOCHREALTIME - t) * 1000000 )); lang+=($us)
+        if [[ $_tip_kind == jj ]]; then
+            t=$EPOCHREALTIME; out=$($_tip_jj 2>/dev/null)
+            (( us = (EPOCHREALTIME - t) * 1000000 )); jj+=($us)
+        fi
+        t=$EPOCHREALTIME; _tip_gather 0; _tip_layout
+        (( us = (EPOCHREALTIME - t) * 1000000 )); whole+=($us)
+    done
+    printf 'last prompt             %6.1f ms\n' $_tip_ms
+    print "median of $n rebuilds"
+    _tip_median $star;  printf '  starship              %6.1f ms\n' $REPLY
+    _tip_median $lang;  printf '  with language         %6.1f ms\n' $REPLY
+    if (( $#jj )); then
+        _tip_median $jj; printf '  jj parent lookup      %6.1f ms\n' $REPLY
+    fi
+    _tip_median $whole; printf '  whole prompt          %6.1f ms   (starship and jj run side by side)\n' $REPLY
+}
+
+tip() {
+    case "$1 $2" in
+        ' ')
+            print "identity  $_tip_opt[identity]   (always | away)"
+            print "lang      $_tip_opt[lang]   (arrival | detected)"
+            print "outcome   $_tip_opt[outcome]   (live | keep)"
+            printf 'last prompt built in %.1f ms; tip cost breaks it down\n' $_tip_ms
+            ;;
+        'identity '(always|away)|'lang '(arrival|detected)|'outcome '(live|keep))
+            _tip_opt[$1]=$2
+            ;;
+        'cost '*)
+            _tip_cost $2
+            ;;
+        *)
+            print -u2 'usage: tip [identity always|away] [lang arrival|detected] [outcome live|keep] [cost [n]]'
+            return 1
+            ;;
+    esac
 }
