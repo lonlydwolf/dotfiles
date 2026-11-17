@@ -16,6 +16,9 @@ allowed-signers = "~/.config/git/allowed_signers"
 [ui]
 default-command = "log"
 pager = "delta"
+# Interactive selection (jj split, squash -i, commit -i, restore -i ...) in
+# Neovim, through hunk.nvim. Remove this line to return to the built-in TUI.
+diff-editor = ["nvim", "-c", "HunkDiffEditor $left $right $output"]
 
 [aliases]
 # Draft a description for a change with the jj-commit-message skill, then open
